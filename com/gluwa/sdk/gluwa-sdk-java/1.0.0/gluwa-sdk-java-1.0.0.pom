@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.gluwa.sdk</groupId>
 	<artifactId>gluwa-sdk-java</artifactId>
-	<version>1.1.0</version>
+	<version>1.0.0</version>
 	<name>Gluwa SDK for Java</name>
 	<description>If your service is developed in Java, the features we provide are available through the SDK. The Gluwa SDK for Java is a library with powerful features that enable Java developers to easily make requests to the Gluwa APIs.</description>
 	<url>https//www.gluwa.com</url>
