@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.gluwa.sdk</groupId>
 	<artifactId>gluwa-sdk-java</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.1.0</version>
 	<name>Gluwa SDK for Java</name>
 	<description>If your service is developed in Java, the features we provide are available through the SDK. The Gluwa SDK for Java is a library with powerful features that enable Java developers to easily make requests to the Gluwa APIs.</description>
 	<url>https//www.gluwa.com</url>
@@ -62,13 +62,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>1.7.25</version>
-			<scope>test</scope>
-		</dependency>
-
 	</dependencies>
 	
 	<build>
@@ -123,8 +116,8 @@
                 <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
                 <branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
                 <includes><include>**/*</include></includes>
-                <repositoryName>Gluwa-Java</repositoryName>      <!-- github repo name -->
-                <repositoryOwner>Gluwa</repositoryOwner>    <!-- github username  -->
+                <repositoryName>Gluwa-Java</repositoryName>      			<!-- github repo name -->
+                <repositoryOwner>Gluwa</repositoryOwner>    				<!-- github username  -->
             </configuration>
             <executions>
               <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
