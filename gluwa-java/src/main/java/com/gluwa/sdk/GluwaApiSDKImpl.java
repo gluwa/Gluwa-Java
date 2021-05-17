@@ -1,5 +1,6 @@
 package com.gluwa.sdk;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Base64;
 import java.util.Base64.Encoder;
@@ -75,7 +76,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		return result;
 
 	}
-	
+
 	@Override
 	public GluwaResponse getAddresses(GluwaTransaction transaction) {
 
@@ -105,7 +106,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 
 		GluwaResponse result = new GluwaResponse();
 		try {
-			result = api.get(path);
+			result = api.get(path, h1, h2);
 
 		} catch (Exception e) {
 			LOGGER.info("GluwaTransaction:{}", transaction);
@@ -139,9 +140,12 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		params.put("Amount", transaction.getAmount());
 		params.put("Fee", transaction.getFee());
 		params.put("Nonce", transaction.getNonce());
-		params.put("Note", transaction.getNote());
-		params.put("MerchantOrderID", transaction.getMerchantOrderID());
-		params.put("Idem", transaction.getIdem());
+		if (transaction.getNote() != null)
+			params.put("Note", transaction.getNote());
+		if (transaction.getMerchantOrderID() != null)
+			params.put("MerchantOrderID", transaction.getMerchantOrderID());
+		if (transaction.getIdem() != null)
+			params.put("Idem", transaction.getIdem());
 
 		GluwaResponse result = new GluwaResponse();
 
@@ -221,7 +225,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 	}
 
 	protected String timestampSignature() {
-		
+
 		String timestamp = timestamp();
 		return base64Encoder.encodeToString((timestamp + "." + signMessage(timestamp.getBytes())).getBytes());
 	}
@@ -251,10 +255,18 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		sb.append(Numeric.cleanHexPrefix(configuration.getMasterEthereumAddress()));// sender address
 		sb.append(Numeric.cleanHexPrefix(transaction.getTargetAddress()));// receiver address
 
-		Uint256 unit2 = new Uint256(Convert.toWei(transaction.getAmount(), Unit.ETHER).toBigInteger()); // amount
+		BigDecimal amount = Convert.toWei(transaction.getAmount(), Unit.ETHER);
+		BigDecimal fee = Convert.toWei(transaction.getFee(), Unit.ETHER);
+
+		if (transaction.currency.isShorWeiDecimals()) {
+			amount = amount.multiply(BigDecimal.valueOf(Math.pow(10, -12)));
+			fee = fee.multiply(BigDecimal.valueOf(Math.pow(10, -12)));
+		}
+
+		Uint256 unit2 = new Uint256(amount.toBigInteger()); // amount
 		sb.append(TypeEncoder.encode(unit2));
 
-		Uint256 unit3 = new Uint256(Convert.toWei(transaction.getFee(), Unit.ETHER).toBigInteger()); // fee
+		Uint256 unit3 = new Uint256(fee.toBigInteger()); // fee
 		sb.append(TypeEncoder.encode(unit3));
 
 		Uint256 unit1 = new Uint256(new BigInteger(transaction.getNonce())); // nonce
