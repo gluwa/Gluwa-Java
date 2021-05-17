@@ -3,7 +3,7 @@ target
 .settings
 .DS_Store
 .project
-src/test
+gluwa-java/src/test
 gluwa-java-mock
 
 # Legacy Eclipse project files
