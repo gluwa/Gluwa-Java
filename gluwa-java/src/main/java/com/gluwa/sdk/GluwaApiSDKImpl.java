@@ -1,6 +1,9 @@
 package com.gluwa.sdk;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.HashMap;
@@ -75,7 +78,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		return result;
 
 	}
-	
+
 	@Override
 	public GluwaResponse getAddresses(GluwaTransaction transaction) {
 
@@ -105,7 +108,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 
 		GluwaResponse result = new GluwaResponse();
 		try {
-			result = api.get(path);
+			result = api.get(path, h1, h2);
 
 		} catch (Exception e) {
 			LOGGER.info("GluwaTransaction:{}", transaction);
@@ -127,7 +130,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		GluwaResponse feeResponse = getFee(transaction);
 
 		transaction.setFee((String) feeResponse.getMapList().get(0).get("MinimumFee"));
-		transaction.setNonce(timestamp());
+		transaction.setNonce(nonce());
 
 		String hash = hashTransaction(transaction);
 
@@ -139,9 +142,12 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		params.put("Amount", transaction.getAmount());
 		params.put("Fee", transaction.getFee());
 		params.put("Nonce", transaction.getNonce());
-		params.put("Note", transaction.getNote());
-		params.put("MerchantOrderID", transaction.getMerchantOrderID());
-		params.put("Idem", transaction.getIdem());
+		if (transaction.getNote() != null)
+			params.put("Note", transaction.getNote());
+		if (transaction.getMerchantOrderID() != null)
+			params.put("MerchantOrderID", transaction.getMerchantOrderID());
+		if (transaction.getIdem() != null)
+			params.put("Idem", transaction.getIdem());
 
 		GluwaResponse result = new GluwaResponse();
 
@@ -221,9 +227,34 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 	}
 
 	protected String timestampSignature() {
-		
+
 		String timestamp = timestamp();
 		return base64Encoder.encodeToString((timestamp + "." + signMessage(timestamp.getBytes())).getBytes());
+	}
+
+	protected String nonce() {
+
+		int max = 9, min = 1;
+
+		SecureRandom rd = null;
+		try {
+			rd = SecureRandom.getInstance("SHA1PRNG");
+		} catch (NoSuchAlgorithmException e) {
+			LOGGER.error(e.getMessage(), e);
+			throw new GluwaSDKException(e);
+		}
+
+		StringBuilder sb = new StringBuilder();
+
+		int randomInt = rd.nextInt(max + 1 - min) + min;
+		sb.append(randomInt);
+		for (int i = 0; i <= 3; i++) {
+			long randomLong = Math.abs(rd.nextLong());
+			sb.append(String.format("%019d", randomLong));
+		}
+
+		return sb.substring(0, 75);
+
 	}
 
 	protected String timestamp() {
