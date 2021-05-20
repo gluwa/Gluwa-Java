@@ -32,7 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 final class GluwaApiService {
 
 	static final Logger LOGGER = LoggerFactory.getLogger(GluwaApiService.class);
-	
+
 	private final static String apiHost = "https://api.gluwa.com";
 	private final static String apiHostDev = "https://sandbox.api.gluwa.com";
 
@@ -79,9 +79,31 @@ final class GluwaApiService {
 			} else {
 				return "0xfb0aaa0432112779d9ac483d9d5e3961ece18eec";
 			}
+
+		case sUSDCG:
+			if (__DEV__) {
+				return "0x5f71cbAebb9c1e8F1664a8eF2e1cFF2ED8044eE0";
+			} else {
+				return "0x39589FD5A1D4C7633142A178F2F2b30314FB2BaF";
+			}
+
+		case sKRWCG:
+			if (__DEV__) {
+				return "0xD8325e055dd2C7406B68aeb77178c23186Dbd147";
+			} else {
+				return "";
+			}
+
+		case sNGNG:
+			if (__DEV__) {
+				return "0x5cb4744Bb6bcC360A63f54499d92c7617F0a8f8c";
+			} else {
+				return "0xc33496C93AaFf765e4925A4E3b873d5efc635405";
+			}
+		default:
+			return null;
 		}
 
-		return null;
 	}
 
 	protected GluwaResponse get(String path, Header... headers) throws IOException, URISyntaxException {
@@ -115,15 +137,15 @@ final class GluwaApiService {
 					sb.append(line);
 
 				EntityUtils.consume(httpEntity);
-				
+
 				response.setBody(sb.toString());
-				
+
 				if (httpResponse.getCode() < 200 || httpResponse.getCode() > 300) {
 					throw new GluwaSDKException(httpResponse.getReasonPhrase() + " " + response.getBody());
 				} else {
 
-					
-					if (response.getBody()  != null && response.getBody().length() > 0 && response.getContentType().toLowerCase().contains("application/json")) {
+					if (response.getBody() != null && response.getBody().length() > 0
+							&& response.getContentType().toLowerCase().contains("application/json")) {
 
 						if (sb.charAt(0) != '[') {
 							sb.append("]");
@@ -138,7 +160,7 @@ final class GluwaApiService {
 			}
 
 		}
-		if (LOGGER.isDebugEnabled()) 
+		if (LOGGER.isDebugEnabled())
 			LOGGER.debug("response:{}", response);
 		return response;
 	}
@@ -155,7 +177,7 @@ final class GluwaApiService {
 					LOGGER.debug("header:{}", header);
 				}
 		}
-		
+
 		GluwaResponse response = new GluwaResponse();
 
 		HttpEntity entity;
@@ -191,15 +213,15 @@ final class GluwaApiService {
 					sb.append(line);
 
 				EntityUtils.consume(httpEntity);
-				
+
 				response.setBody(sb.toString());
-				
+
 				if (httpResponse.getCode() < 200 || httpResponse.getCode() > 300) {
 					throw new GluwaSDKException(httpResponse.getReasonPhrase() + " " + response.getBody());
 				} else {
 
-					
-					if (response.getBody()  != null && response.getBody().length() > 0 && response.getContentType().toLowerCase().contains("application/json")) {
+					if (response.getBody() != null && response.getBody().length() > 0
+							&& response.getContentType().toLowerCase().contains("application/json")) {
 
 						if (sb.charAt(0) != '[') {
 							sb.append("]");
@@ -213,10 +235,10 @@ final class GluwaApiService {
 				}
 			}
 		}
-		
-		if (LOGGER.isDebugEnabled()) 
+
+		if (LOGGER.isDebugEnabled())
 			LOGGER.debug("response:{}", response);
-		
+
 		entity.close();
 		return response;
 	}
