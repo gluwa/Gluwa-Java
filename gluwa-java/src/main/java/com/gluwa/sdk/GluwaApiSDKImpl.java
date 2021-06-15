@@ -2,6 +2,8 @@ package com.gluwa.sdk;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.HashMap;
@@ -128,7 +130,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		GluwaResponse feeResponse = getFee(transaction);
 
 		transaction.setFee((String) feeResponse.getMapList().get(0).get("MinimumFee"));
-		transaction.setNonce(timestamp());
+		transaction.setNonce(nonce());
 
 		String hash = hashTransaction(transaction);
 
@@ -228,6 +230,31 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 
 		String timestamp = timestamp();
 		return base64Encoder.encodeToString((timestamp + "." + signMessage(timestamp.getBytes())).getBytes());
+	}
+
+	protected String nonce() {
+
+		int max = 9, min = 1;
+
+		SecureRandom rd = null;
+		try {
+			rd = SecureRandom.getInstance("SHA1PRNG");
+		} catch (NoSuchAlgorithmException e) {
+			LOGGER.error(e.getMessage(), e);
+			throw new GluwaSDKException(e);
+		}
+
+		StringBuilder sb = new StringBuilder();
+
+		int randomInt = rd.nextInt(max + 1 - min) + min;
+		sb.append(randomInt);
+		for (int i = 0; i <= 3; i++) {
+			long randomLong = Math.abs(rd.nextLong());
+			sb.append(String.format("%019d", randomLong));
+		}
+
+		return sb.substring(0, 75);
+
 	}
 
 	protected String timestamp() {
