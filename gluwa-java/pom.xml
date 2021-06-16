@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.gluwa.sdk</groupId>
 	<artifactId>gluwa-sdk-java</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.1</version>
 	<name>Gluwa SDK for Java</name>
 	<description>If your service is developed in Java, the features we provide are available through the SDK. The Gluwa SDK for Java is a library with powerful features that enable Java developers to easily make requests to the Gluwa APIs.</description>
 	<url>https//www.gluwa.com</url>
@@ -107,9 +107,9 @@
     </plugin>
     
      <plugin>
-            <groupId>com.github.github</groupId>
-            <artifactId>site-maven-plugin</artifactId>
-            <version>0.11</version>
+           <groupId>com.github.github</groupId>
+	      <artifactId>site-maven-plugin</artifactId>
+	      <version>0.12</version>
             <configuration>
                 <message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
                 <noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
@@ -117,7 +117,8 @@
                 <branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
                 <includes><include>**/*</include></includes>
                 <repositoryName>Gluwa-Java</repositoryName>      			<!-- github repo name -->
-                <repositoryOwner>Gluwa</repositoryOwner>    				<!-- github username  -->
+                <repositoryOwner>gluwa</repositoryOwner>    				<!-- github username  -->          
+                <merge>true</merge>
             </configuration>
             <executions>
               <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
@@ -128,6 +129,7 @@
                 <phase>deploy</phase>
               </execution>
             </executions>
+            
         </plugin>
         
 		</plugins> 
