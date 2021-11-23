@@ -26,7 +26,7 @@ import org.web3j.utils.Numeric;
 
 /**
  * call Gluwa Api
- * 
+ *
  * @author Gluwa developer
  *
  */
@@ -45,7 +45,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 
 	/**
 	 * get payment QRCode Image
-	 * 
+	 *
 	 * @param transaction
 	 * @return api response
 	 */
@@ -104,7 +104,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 
 		Header h1 = new BasicHeader("Accept", "application/json");
 		Header h2 = new BasicHeader("Content-Type", "application/json;charset=UTF-8");
-		String path = generatePath(GluwaApiService.V1_PATH_FEE, transaction.getCurrency().name());
+		String path = generatePath(GluwaApiService.V1_PATH_FEE, transaction.getCurrency().name(), transaction.getAmount());
 
 		GluwaResponse result = new GluwaResponse();
 		try {
@@ -260,6 +260,14 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 	protected String timestamp() {
 		long now = System.currentTimeMillis() / 1000L;
 		return Long.toString(now);
+	}
+
+	private String generatePath(String path, String currency, String amount) {
+		String returnStr = path.replaceAll("\\{Currency\\}", currency);
+
+		returnStr = returnStr.replaceAll("\\{Amount\\}", String.valueOf(amount));
+
+		return returnStr;
 	}
 
 	private String generatePath(String path, String currency) {

@@ -38,7 +38,7 @@ final class GluwaApiService {
 
 	protected final static String V1_PATH_QRCODE = "/v1/QRCode";
 	protected final static String V1_PATH_ADDRESS = "/v1/{Currency}/Addresses/";
-	protected final static String V1_PATH_FEE = "/v1/{Currency}/fee";
+	protected final static String V1_PATH_FEE = "/v1/{Currency}/fee?amount={Amount}";
 	protected final static String V1_PATH_TRANSACTION = "/v1/Transactions";
 	protected final static String V1_PATH_TRANSACTION_HISTORY = "/v1/{Currency}/Addresses/{MasterEthereumAddress}/Transactions";
 	protected final static String V1_PATH_TRANSACTION_DETAIL = "/v1/{Currency}/Transactions/";
