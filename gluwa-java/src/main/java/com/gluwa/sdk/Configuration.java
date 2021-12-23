@@ -8,6 +8,8 @@ import org.web3j.utils.Numeric;
 
 public class Configuration {
 
+	static long SIG_DOMAIN_TRANSFER = 3;
+
 	private boolean __DEV__ = false;
 	private String apiKey;
 	private String apiSecret;
@@ -15,14 +17,14 @@ public class Configuration {
 	private String masterEthereumPrivateKey;
 	private String masterEthereumAddress;
 	private ECKeyPair eCKeyPair;
-	
-	
-	
+
+
+
 	
 	public boolean __DEV__() {
 		return __DEV__;
 	}
-	
+
 	/**
 	 * sandbox mode
 	 * @param __DEV__ true if sandbox mode, default = false
@@ -30,7 +32,7 @@ public class Configuration {
 	public void set__DEV__(boolean __DEV__) {
 		this.__DEV__ = __DEV__;
 	}
-	
+
 	public String getApiKey() {
 		return apiKey;
 	}
@@ -82,7 +84,7 @@ public class Configuration {
 	public void setMasterEthereumAddress(String masterEthereumAddress) {
 		this.masterEthereumAddress = masterEthereumAddress;
 	}
-	
+
 	/**
 	 * authorization code
 	 * @return authorization code

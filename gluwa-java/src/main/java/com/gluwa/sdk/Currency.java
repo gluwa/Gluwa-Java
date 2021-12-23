@@ -1,7 +1,7 @@
 package com.gluwa.sdk;
 
 public enum Currency {
-	KRWG(false), USDG(false), BTC(false), NGNG(false), sUSDCG(true), sKRWCG(false), sNGNG(false);
+	GCRE(false), KRWG(false), USDCG(false), BTC(false), NGNG(false), sUSDCG(true), sKRWCG(false), sNGNG(false);
 
 	private boolean shorWeiDecimals;
 
@@ -12,5 +12,4 @@ public enum Currency {
 	public boolean isShorWeiDecimals() {
 		return this.shorWeiDecimals;
 	}
-
 }

@@ -1,23 +1,22 @@
 package com.gluwa.sdk;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class GluwaResponse implements Serializable {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -188235700342848177L;
-	
+
 	int code;
 	String reason;
 	String contentType;
-	
+
 	String body;
 	List<Map<String, Object>> mapList;
-	
+
 	public int getCode() {
 		return code;
 	}
@@ -53,6 +52,6 @@ public class GluwaResponse implements Serializable {
 		return "GluwaResponse [code=" + code + ", reason=" + reason + ", contentType=" + contentType + ", body=" + body
 				+ "]";
 	}
-	
-	
+
+
 }
