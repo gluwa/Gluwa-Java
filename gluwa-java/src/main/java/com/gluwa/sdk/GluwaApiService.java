@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +27,7 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.json.JSONObject;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,51 +62,65 @@ final class GluwaApiService {
 
 	protected String getApiHost() {
 		if (__DEV__)
-			return this.apiHostDev;
+			return GluwaApiService.apiHostDev;
 		else
-			return this.apiHost;
+			return GluwaApiService.apiHost;
 	}
 
-	protected String getContractAddress(Currency currency) {
+	protected String getNetType() {
+		if (__DEV__)
+			return "Testnet";
+		else
+			return "Mainnet";
+	}
 
-		switch (currency) {
-		case KRWG:
-			if (__DEV__) {
-				return "0x408b7959b3e15b8b1e8495fa9cb123c0180d44db";
-			} else {
-				return "0x4cc8486f2f3dce2d3b5e27057cf565e16906d12d";
-			}
-		case USDG:
-			if (__DEV__) {
-				return "0x8e9611f8ebc9323EdDA39eA2d8F31bbb2436adEE";
-			} else {
-				return "0xfb0aaa0432112779d9ac483d9d5e3961ece18eec";
-			}
+	protected String[] getContractAddressData(Currency currency) {
 
-		case sUSDCG:
-			if (__DEV__) {
-				return "0x5f71cbAebb9c1e8F1664a8eF2e1cFF2ED8044eE0";
-			} else {
-				return "0x39589FD5A1D4C7633142A178F2F2b30314FB2BaF";
+		try {
+			String netType = getNetType();
+
+			String apiURL = "https://api.gluwa.com/V1/Contract/Address/" + currency + "/" + netType;
+			URL url = new URL(apiURL);
+
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("path:{}", apiURL);
 			}
 
-		case sKRWCG:
-			if (__DEV__) {
-				return "0xD8325e055dd2C7406B68aeb77178c23186Dbd147";
-			} else {
-				return "";
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("GET");
+			con.setRequestProperty("Accept", "application/json");
+			con.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+
+			int responseCode = con.getResponseCode();
+
+			BufferedReader br;
+			if (responseCode == 200) { // 정상 호출
+				br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			} else { // 에러 발생
+				br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
 			}
 
-		case sNGNG:
-			if (__DEV__) {
-				return "0x5cb4744Bb6bcC360A63f54499d92c7617F0a8f8c";
-			} else {
-				return "0xc33496C93AaFf765e4925A4E3b873d5efc635405";
+			String inputLine;
+			StringBuffer responseStr = new StringBuffer();
+			while ((inputLine = br.readLine()) != null) {
+				responseStr.append(inputLine);
 			}
-		default:
-			return null;
+			br.close();
+
+			if (LOGGER.isDebugEnabled())
+				LOGGER.debug("response:{}", responseStr);
+
+			JSONObject responseJson = new JSONObject(responseStr.toString());
+
+			return new String[] {
+				responseJson.getString("Address"), // Address
+				responseJson.getString("Currency"), // Currency
+				responseJson.getNumber("Decimals").toString() // Decimals
+			};
+		} catch (Exception e) {
+			System.out.println(e);
+			return new String[]{null, null, null};
 		}
-
 	}
 
 	protected GluwaResponse get(String path, Header... headers) throws IOException, URISyntaxException {

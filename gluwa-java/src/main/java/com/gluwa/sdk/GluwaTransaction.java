@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class GluwaTransaction implements Serializable {
-	
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 5510883158387021589L;
 	Currency currency;
@@ -18,12 +18,12 @@ public class GluwaTransaction implements Serializable {
 	String targetAddress;
 	String nonce;
 	UUID idem;
-	
+
 	int limit = 100;
 	String status = "Confirmed";
 	int offset = 0;
 	String txnHash;
-	
+
 	public String getTargetAddress() {
 		return targetAddress;
 	}
@@ -96,7 +96,7 @@ public class GluwaTransaction implements Serializable {
 	public void setTxnHash(String txnHash) {
 		this.txnHash = txnHash;
 	}
-	
+
 	public UUID getIdem() {
 		return idem;
 	}
@@ -110,6 +110,6 @@ public class GluwaTransaction implements Serializable {
 				+ ", nonce=" + nonce + ", limit=" + limit + ", status=" + status + ", offset=" + offset + ", txnHash="
 				+ txnHash + "]";
 	}
-	
-	
+
+
 }

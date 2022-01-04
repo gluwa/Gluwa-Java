@@ -16,6 +16,7 @@ import org.bouncycastle.crypto.params.KeyParameter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.abi.TypeEncoder;
+import org.web3j.abi.datatypes.generated.Uint8;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Hash;
 import org.web3j.crypto.Sign;
@@ -109,7 +110,6 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		GluwaResponse result = new GluwaResponse();
 		try {
 			result = api.get(path, h1, h2);
-
 		} catch (Exception e) {
 			LOGGER.info("GluwaTransaction:{}", transaction);
 			LOGGER.error(e.getMessage(), e);
@@ -177,7 +177,6 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		GluwaResponse result = new GluwaResponse();
 		try {
 			result = api.get(path, h1, h2);
-
 		} catch (Exception e) {
 			LOGGER.info("GluwaTransaction:{}", transaction);
 			LOGGER.error(e.getMessage(), e);
@@ -185,7 +184,6 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		}
 
 		return result;
-
 	}
 
 	@Override
@@ -206,7 +204,6 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		}
 
 		return result;
-
 	}
 
 	@Override
@@ -254,7 +251,6 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		}
 
 		return sb.substring(0, 75);
-
 	}
 
 	protected String timestamp() {
@@ -277,6 +273,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 	protected String signMessage(byte[] message) {
 
 		SignatureData signatureData = Sign.signPrefixedMessage(message, configuration.getECKeyPair());
+
 		return Numeric.toHexString(signatureData.getR())
 				+ Numeric.cleanHexPrefix(Numeric.toHexString(signatureData.getS()))
 				+ Numeric.cleanHexPrefix(Numeric.toHexString(signatureData.getV()));
@@ -284,34 +281,57 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 
 	protected String hashTransaction(GluwaTransaction transaction) {
 
+		String[] contractAddressData = api.getContractAddressData(transaction.getCurrency());
+
 		StringBuffer sb = new StringBuffer();
 
-		sb.append(Numeric.cleanHexPrefix(api.getContractAddress(transaction.getCurrency()))); // contract
-		sb.append(Numeric.cleanHexPrefix(configuration.getMasterEthereumAddress()));// sender address
-		sb.append(Numeric.cleanHexPrefix(transaction.getTargetAddress()));// receiver address
+		if ("USDCG".equals(contractAddressData[1])) {
+			// append domain
+			Uint8 domain = new Uint8(Configuration.SIG_DOMAIN_TRANSFER);
+			sb.append(domain.getValue());
+
+			// append chainID
+			long chainIDValue;
+			if (configuration.__DEV__()) {
+				chainIDValue = 4;
+			} else {
+				chainIDValue = 1;
+			}
+			Uint256 chainID = new Uint256(chainIDValue);
+			sb.append(TypeEncoder.encode(chainID));
+		}
+
+		// contract address
+		sb.append(Numeric.cleanHexPrefix(contractAddressData[0]));
+		// sender address
+		sb.append(Numeric.cleanHexPrefix(configuration.getMasterEthereumAddress()));
+		// receiver address
+		sb.append(Numeric.cleanHexPrefix(transaction.getTargetAddress()));
 
 		BigDecimal amount = Convert.toWei(transaction.getAmount(), Unit.ETHER);
 		BigDecimal fee = Convert.toWei(transaction.getFee(), Unit.ETHER);
-
-		if (transaction.currency.isShorWeiDecimals()) {
+		if ("6".equals(contractAddressData[2])) {
 			amount = amount.multiply(BigDecimal.valueOf(Math.pow(10, -12)));
 			fee = fee.multiply(BigDecimal.valueOf(Math.pow(10, -12)));
 		}
 
-		Uint256 unit2 = new Uint256(amount.toBigInteger()); // amount
+		// amount
+		Uint256 unit2 = new Uint256(amount.toBigInteger());
 		sb.append(TypeEncoder.encode(unit2));
 
-		Uint256 unit3 = new Uint256(fee.toBigInteger()); // fee
+		// fee
+		Uint256 unit3 = new Uint256(fee.toBigInteger());
 		sb.append(TypeEncoder.encode(unit3));
 
-		Uint256 unit1 = new Uint256(new BigInteger(transaction.getNonce())); // nonce
+		// nonce
+		Uint256 unit1 = new Uint256(new BigInteger(transaction.getNonce()));
 		sb.append(TypeEncoder.encode(unit1));
 
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("transaction:{}", transaction);
-			LOGGER.debug("beforeString:{}", sb.toString());
+			LOGGER.debug("transaction:{}\n", transaction);
+			LOGGER.debug("beforeString:{}\n", sb.toString());
 		}
+
 		return Hash.sha3(sb.toString());
 	}
-
 }
