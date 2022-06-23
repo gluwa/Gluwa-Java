@@ -5,13 +5,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: |
-      "master"
-      "GluwaSDK-UnitTests"
+    branches: [ "GluwaSDK-UnitTests" ]
   pull_request:
-    branches: |
-      "master"
-      "GluwaSDK-UnitTests"
+    branches: [ "GluwaSDK-UnitTests" ]
   workflow_dispatch:
 
 jobs:
