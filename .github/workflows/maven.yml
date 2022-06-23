@@ -23,9 +23,9 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
+    - name: Install with Maven
       working-directory: gluwa-java
-      run: mvn build
+      run: mvn install
     - name: Test with Maven
       working-directory: gluwa-java
       run: mvn clean test
