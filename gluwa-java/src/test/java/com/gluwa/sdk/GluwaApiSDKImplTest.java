@@ -7,13 +7,54 @@ import static org.junit.Assert.assertTrue;
 
 // import java.util.UUID;
 
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.web3j.utils.Numeric;
 
+@RunWith(Cucumber.class)
+@CucumberOptions(
+		publish = true,
+		plugin = {"pretty", "html:target/cucumber", "json:target/cucumber/report.json"},
+		features = "src/test/resources/features",
+		glue = {"definitions", "com.gluwa.sdk"},
+		tags = "@gluwaSdk" // same as VM option -Dcucumber.options="--tags @gluwaSdk"
+)
 public class GluwaApiSDKImplTest {
+
+	static final Logger LOGGER = LoggerFactory.getLogger(GluwaApiSDKImplTest.class);
+
+	@BeforeClass
+	public static void setup() {
+		//System.out.println("BeforeAll");
+	}
+
+	/*@Test
+	public void getPaymentQRCode_Test() {
+		Configuration conf = new ConfigurationForTest();
+		GluwaApiSDKImpl sdkImpl = new GluwaApiSDKImpl(conf);
+
+		GluwaTransaction transaction = new GluwaTransaction();
+		transaction.setCurrency(Currency.USDCG);
+		transaction.setAmount("51");
+		transaction.setExpiry(1800);
+
+		GluwaResponse result = sdkImpl.getPaymentQRCode(transaction);
+		System.out.println(result.getCode());
+		System.out.println(result.getBody());
+		assertNotNull(result);
+	}*/
+
+	@AfterClass
+	public static void teardown() {
+		//System.out.println("AfterAll");
+	}
+}
+/*public class GluwaApiSDKImplTest {
 	static final Logger LOGGER = LoggerFactory.getLogger(GluwaApiSDKImplTest.class);
 
 	@Test
@@ -223,4 +264,4 @@ public class GluwaApiSDKImplTest {
 		String signature = wrapper.signMessage(Numeric.hexStringToByteArray(message));
 		LOGGER.debug("signature:{}", signature);
 	}
-}
+}*/
