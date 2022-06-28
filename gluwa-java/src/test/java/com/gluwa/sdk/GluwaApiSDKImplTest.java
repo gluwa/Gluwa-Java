@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 @RunWith(Cucumber.class)
 @CucumberOptions(
 		publish = true,
-		plugin = {"pretty", "html:target/cucumber", "json:target/cucumber/report.json"},
+		plugin = {"pretty", "html:target/cucumber/report.json", "json:target/cucumber/report.json"},
 		features = "src/test/resources/features",
 		glue = {"definitions", "com.gluwa.sdk"},
 		tags = "@gluwaSdk" // same as VM option -Dcucumber.options="--tags @gluwaSdk"
