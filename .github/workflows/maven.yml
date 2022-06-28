@@ -26,5 +26,5 @@ jobs:
     - name: Install/Test with Maven
       working-directory: gluwa-java
       env:
-        CUCUMBER_PUBLISH_TOKEN: ${{ env.CUCUMBER_PUBLISH_TOKEN }}
+        CUCUMBER_PUBLISH_TOKEN: ${{ secrets.CUCUMBER_PUBLISH_TOKEN }}
       run: mvn clean install
