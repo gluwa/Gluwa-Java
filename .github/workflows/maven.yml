@@ -23,9 +23,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Install with Maven
+    - name: Install/Test with Maven
       working-directory: gluwa-java
-      run: mvn install
-    - name: Test with Maven
-      working-directory: gluwa-java
-      run: mvn clean test
+      run: mvn clean install
