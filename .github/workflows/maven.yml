@@ -17,14 +17,35 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+        
     - name: Install/Test with Maven
       working-directory: gluwa-java
       env:
         CUCUMBER_PUBLISH_TOKEN: ${{ secrets.CUCUMBER_PUBLISH_TOKEN }}
+        API_KEY_PROD: ${{ secrets.API_KEY_PROD }}
+        API_KEY_SANDBOX: ${{ secrets.API_KEY_SANDBOX }}
+        API_KEY_TEST: ${{ secrets.API_KEY_TEST }}
+        API_SECRET_PROD: ${{ secrets.API_SECRET_PROD }}
+        API_SECRET_SANDBOX: ${{ secrets.API_SECRET_SANDBOX }}
+        API_SECRET_TEST: ${{ secrets.API_SECRET_TEST }}
+        DEFAULT_PRIVATE: ${{ secrets.DEFAULT_PRIVATE }}
+        SRC_PRIVATE_BTC_PROD: ${{ secrets.SRC_PRIVATE_BTC_PROD }}
+        SRC_PRIVATE_BTC_SANDBOX: ${{ secrets.SRC_PRIVATE_BTC_SANDBOX }}
+        SRC_PRIVATE_NGNG_PROD: ${{ secrets.SRC_PRIVATE_GENERAL }}
+        SRC_PRIVATE_NGNG_SANDBOX: ${{ secrets.SRC_PRIVATE_GENERAL }}
+        SRC_PRIVATE_sNGNG_PROD: ${{ secrets.SRC_PRIVATE_GENERAL }}
+        SRC_PRIVATE_sNGNG_SANDBOX: ${{ secrets.SRC_PRIVATE_GENERAL }}
+        SRC_PRIVATE_sUSDCG_PROD: ${{ secrets.SRC_PRIVATE_sUSDCG_PROD }}
+        SRC_PRIVATE_sUSDCG_SANDBOX: ${{ secrets.SRC_PRIVATE_sUSDCG_SANDBOX }}
+        TRG_PRIVATE_BTC_PROD: ${{ secrets.TRG_PRIVATE_BTC_PROD }}
+        TRG_PRIVATE_BTC_SANDBOX: ${{ secrets.TRG_PRIVATE_BTC_SANDBOX }}
+        TRG_PRIVATE_sUSDCG_PROD: ${{ secrets.TRG_PRIVATE_GENERAL }}
+        TRG_PRIVATE_sUSDCG_SANDBOX: ${{ secrets.TRG_PRIVATE_GENERAL }}
       run: mvn clean install
