@@ -59,7 +59,7 @@ public class TransactionTests {
     /***
      * When PR for this method is merged to master, this test will be refactored correctly
      */
-    public GluwaResponse getListTransactionHistoryTest_Pos(Currency currency) {
+    public static GluwaResponse getListTransactionHistoryTest_Pos(Currency currency) {
         Configuration conf = new ConfigurationForTest();
         GluwaApiSDKImpl wrapper = new GluwaApiSDKImpl(conf);
 
@@ -69,5 +69,20 @@ public class TransactionTests {
         transaction.setStatus("Confirmed");
         transaction.setOffset(0);
         return wrapper.getListTransactionHistory(transaction);
+    }
+
+    public GluwaResponse getListTransactionDetail_test(Currency currency) {
+        Configuration conf = new ConfigurationForTest();
+        GluwaApiSDKImpl wrapper = new GluwaApiSDKImpl(conf);
+
+        GluwaResponse transactionList = getListTransactionHistoryTest_Pos(currency);
+        String txnHash = transactionList.getMapList().get(0).get("TxnHash").toString();
+
+        GluwaTransaction transaction = new GluwaTransaction();
+        transaction.setCurrency(currency);
+        transaction.setTxnHash(txnHash);
+
+        GluwaResponse result = wrapper.getListTransactionDetail(transaction);
+        return wrapper.getListTransactionDetail(transaction);
     }
 }

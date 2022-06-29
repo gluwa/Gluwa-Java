@@ -42,10 +42,26 @@ public class GluwaSdkStepDefs {
 
     @When("I get list of transactions for \"([^\"]*)\"$")
     public void iGetListOfTransactionsFor(Currency currency) {
-        result = txTest.getListTransactionHistoryTest_Pos(currency);
+        result = TransactionTests.getListTransactionHistoryTest_Pos(currency);
         System.out.println("=====================================");
         System.out.println("Status code: " + result.getCode());
         System.out.println("List of Transactions: " + result.getMapList());
     }
 
+//    @When("I get a \"([^\"]*)\"$ transaction by \"hash\"")
+//    public void iGetTransactionByHash(Currency currency, String hash){
+//        result = txTest.getListTransactionDetail_test(currency, hash);
+//        System.out.println("=====================================");
+//        System.out.println("Status code: " + result.getCode());
+//        System.out.println("Transaction details: " + result.getMapList());
+//    }
+
+    @When("I get a transaction by hash for \"([^\"]*)\"$")
+    public void iGetATransactionBy(Currency currency) {
+        //Currency enumCurrency = Currency.valueOf(currency);
+        result = txTest.getListTransactionDetail_test(currency);
+        System.out.println("=====================================");
+        System.out.println("Status code: " + result.getCode());
+        System.out.println("Transaction details: " + result.getMapList());
+    }
 }

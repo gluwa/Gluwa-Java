@@ -25,3 +25,11 @@
     Scenario: Get List of Transactions end to end
       When I get list of transactions for "USDCG"
       Then I validate get response
+
+    @gluwaSdk4
+    Scenario: Get transaction details by hash
+      When I get a transaction by hash for "USDCG"
+      Then I validate get response
+
+
+
