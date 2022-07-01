@@ -28,7 +28,6 @@ jobs:
     - name: Install/Test with Maven
       working-directory: gluwa-java
       env:
-        CUCUMBER_PUBLISH_TOKEN: ${{ secrets.CUCUMBER_PUBLISH_TOKEN }}
         API_KEY_PROD: ${{ secrets.API_KEY_PROD }}
         API_KEY_SANDBOX: ${{ secrets.API_KEY_SANDBOX }}
         API_KEY_TEST: ${{ secrets.API_KEY_TEST }}
@@ -49,3 +48,10 @@ jobs:
         TRG_PRIVATE_sUSDCG_PROD: ${{ secrets.TRG_PRIVATE_GENERAL }}
         TRG_PRIVATE_sUSDCG_SANDBOX: ${{ secrets.TRG_PRIVATE_GENERAL }}
       run: mvn clean install
+      
+    - name: Deploy report to Github pages
+      uses: actions/GluwaSDK-UnitTests@v1
+      with:
+        CUCUMBER_PUBLISH_TOKEN: ${{ secrets.CUCUMBER_PUBLISH_TOKEN }}
+        publish_dir: ./target/cucumber
+
