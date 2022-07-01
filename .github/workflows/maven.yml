@@ -56,10 +56,10 @@ jobs:
     
     - uses: deblockt/cucumber-report-annotations-action@v1.7
       with:
-        access-token: ${{ secrets.GITHUB_TOKEN }}  
-      
-    - name: Deploy report to Github pages
+        access-token: ${{ secrets.GITHUB_TOKEN }}
+        path: "**/cucumber.json"
+    - name: Deploy report page to GitHub Page
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./
+        publish_dir: ./target
