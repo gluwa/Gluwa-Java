@@ -28,4 +28,5 @@ gluwa-java-mock
 !.vscode/extensions.json
 .history
 gluwa-java/src/test/resources/envVariables.properties
+gluwa-java/src/test/properties
 *.properties
