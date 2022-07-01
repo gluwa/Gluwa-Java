@@ -50,6 +50,7 @@ jobs:
       run: mvn clean install
       
     - name: Deploy report to Github pages
+      uses: actions/checkout@v2
       with:
         CUCUMBER_PUBLISH_TOKEN: ${{ secrets.CUCUMBER_PUBLISH_TOKEN }}
         publish_dir: ./target/cucumber
