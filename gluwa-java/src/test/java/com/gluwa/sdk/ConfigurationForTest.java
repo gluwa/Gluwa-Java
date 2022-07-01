@@ -4,12 +4,13 @@ import org.web3j.crypto.Credentials;
 
 public class ConfigurationForTest extends Configuration {
 
+
     // Config variables
     public static final String API_KEY = System.getenv("API_KEY_SANDBOX");
     public static final String API_SECRET = System.getenv("API_SECRET_SANDBOX");
     public static final String WEBHOOK_SECRET = System.getenv("WebhookSecret");
-    public static final String ETH_PUBLIC_ADDRESS = getEthAddress(System.getenv("SRC_PRIVATE_GENERAL"));
-    public static final String ETH_PRIVATE_KEY = System.getenv("SRC_PRIVATE_GENERAL");
+    public static final String ETH_PUBLIC_ADDRESS = getEthAddress(System.getenv("SRC_PRIVATE_sNGNG_PROD"));
+    public static final String ETH_PRIVATE_KEY = System.getenv("SRC_PRIVATE_sNGNG_PROD");
 
     public ConfigurationForTest() {
         super.set__DEV__(true);
