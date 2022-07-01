@@ -1,0 +1,32 @@
+target
+.classpath
+.settings
+.DS_Store
+.project
+gluwa-sdk-java.iml
+gluwa-java-mock
+
+# Legacy Eclipse project files
+.classpath
+.project
+.cproject
+.settings/
+.idea
+
+# Visual Studio
+.vs/*
+
+# Visual Studio Code
+*.code-workspace
+*.code-workspace-temp
+.vscode
+.vscode-temp
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history
+gluwa-java/src/test/resources/envVariables.properties
+gluwa-java/src/test/properties
+*.properties
