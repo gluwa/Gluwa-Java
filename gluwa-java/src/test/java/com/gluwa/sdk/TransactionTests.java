@@ -13,7 +13,7 @@ public class TransactionTests {
      * @description = Positive test to post transaction with USDCG token
      * @return = Base64 PNG format QR code
      */
-    public GluwaResponse PostTransactionTest_Pos(Currency currency) {
+    public GluwaResponse postTransactionTest_Pos(Currency currency) {
         GluwaApiSDKImpl wrapper = new GluwaApiSDKImpl(new ConfigurationForTest());
         GluwaTransaction transaction = new GluwaTransaction();
 

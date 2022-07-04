@@ -16,7 +16,7 @@ public class GluwaSdkStepDefs {
 
     @When("I post transaction via Gluwa SDK for \"([^\"]*)\"$")
     public void iPostTransactionViaGluwaSDKForCurrency(Currency currency) {
-        result = txTest.PostTransactionTest_Pos(currency);
+        result = txTest.postTransactionTest_Pos(currency);
         System.out.println("=====================================");
         System.out.println("Status code: " + result.getCode());
     }
@@ -58,10 +58,29 @@ public class GluwaSdkStepDefs {
 
     @When("I get a transaction by hash for \"([^\"]*)\"$")
     public void iGetATransactionBy(Currency currency) {
-        //Currency enumCurrency = Currency.valueOf(currency);
         result = txTest.getListTransactionDetail_test(currency);
         System.out.println("=====================================");
         System.out.println("Status code: " + result.getCode());
         System.out.println("Transaction details: " + result.getMapList());
     }
+
+    @When("I post transaction via Gluwa SDK using invalid currency as \"([^\"]*)\"$")
+    public void iPostTransactionViaGluwaSDKUsingInvalidCurrencyAs(Currency invalidCurrency) {
+        try {
+            result = txTest.postTransactionTest_Pos(invalidCurrency);
+            System.out.println("=====================================");
+            System.out.println("Status code: " + result.getCode());
+            System.out.println("REASON: " + result.getReason());
+            System.out.println("RESPONSE BODY: " + result.getBody());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    @Then("I validate bad request response")
+    public void iValidateBadRequestResponse() {
+        assertThat(result.getCode()).isEqualTo(400);
+        //assertThat(result.getReason()).isEqualTo("OK");
+    }
+
 }
