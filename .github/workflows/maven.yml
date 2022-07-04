@@ -48,7 +48,7 @@ jobs:
         
     - name: Install with Maven
       working-directory: gluwa-java
-      run: mvn install
+      run: mvn install -DskipTests
       
     - name: Test with Maven
       working-directory: gluwa-java
