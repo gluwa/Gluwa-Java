@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      CUCUMBER_PUBLISH_TOKEN: ${{ secrets.CUCUMBER_PUBLISH_TOKEN }}
       API_KEY_PROD: ${{ secrets.API_KEY_PROD }}
       API_KEY_SANDBOX: ${{ secrets.API_KEY_SANDBOX }}
       API_KEY_TEST: ${{ secrets.API_KEY_TEST }}
