@@ -37,7 +37,8 @@ jobs:
       TRG_PRIVATE_sUSDCG_SANDBOX: ${{ secrets.TRG_PRIVATE_GENERAL }}
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
     
     - name: Set up JDK 17
       uses: actions/setup-java@v3
@@ -45,7 +46,7 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-        
+    
     - name: Install with Maven
       working-directory: gluwa-java
       run: mvn install -DskipTests
@@ -54,11 +55,15 @@ jobs:
       working-directory: gluwa-java
       run: mvn test
     
-    - uses: deblockt/cucumber-report-annotations-action@v1.7
+    - name: Cucumber report annotations
+      uses: deblockt/cucumber-report-annotations-action@v1.7
+      if: always()
       with:
         access-token: ${{ secrets.GITHUB_TOKEN }}
         path: "**/cucumber.json"
+    
     - name: Deploy report page to GitHub Page
+      if: always()
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
