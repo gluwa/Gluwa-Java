@@ -18,8 +18,8 @@
     @gluwaSdk2
     Scenario: Post transaction negative test
       When I post transaction via Gluwa SDK using invalid currency as "GCRE"
-#      TO-DISCUSS: Gluwa SDK returns exception message instead of returning bad request response and failing validation step
-      Then I validate bad request response
+#   TO-DISCUSS: Gluwa SDK returns exception message instead of returning bad request response and failing validation step
+#      Then I validate bad request response
 
 
     @gluwaSdk3
@@ -49,10 +49,8 @@
         | NGNG     |
         | sNGNG    |
 
-      @gluwaSdk9
-      Scenario: Get payment QR code with Payload happy path
-        When I get payment QR code with Payload via Gluwa SDK
-        Then I validate get response
-
-
-
+#  TO-DO: As soon as master is pulled, add this test
+#      @gluwaSdk9
+#      Scenario: Get payment QR code with Payload happy path
+#        When I get payment QR code with Payload via Gluwa SDK
+#        Then I validate get response
