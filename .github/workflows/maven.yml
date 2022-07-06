@@ -5,9 +5,13 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "GluwaSDK-UnitTests" ]
+    branches:
+      - 'feature/**'
+      - 'master'
   pull_request:
-    branches: [ "GluwaSDK-UnitTests" ]
+    branches:
+      - 'feature/**'
+      - 'master'
   workflow_dispatch:
 
 jobs:
@@ -40,29 +44,29 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    
-    - name: Set up JDK 17
+
+    - name: Set up JDK
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    
+
     - name: Install with Maven
       working-directory: gluwa-java
       run: mvn install -DskipTests
       
     - name: Test with Maven
       working-directory: gluwa-java
-      run: mvn test
-    
+      run: mvn test -e
+
     - name: Cucumber report annotations
       uses: deblockt/cucumber-report-annotations-action@v1.7
       if: always()
       with:
         access-token: ${{ secrets.GITHUB_TOKEN }}
         path: "**/report.json"
-    
+
     - name: Deploy report page to GitHub Page
       if: always()
       uses: peaceiris/actions-gh-pages@v3
