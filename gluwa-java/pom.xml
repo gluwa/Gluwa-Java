@@ -16,12 +16,37 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<github.global.server>github</github.global.server>
 	</properties>
+	<repositories>
+		<repository>
+			<id>Gluwa-java-mvn-repo</id>
+			<url>https://raw.github.com/gluwa/Gluwa-Java/mvn-repo/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
 	<dependencies>
 		<!-- core dependency -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.12.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.masterthought</groupId>
+			<artifactId>cucumber-reporting</artifactId>
+			<version>5.6.1</version>
+		</dependency>
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20210307</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gluwa.sdk</groupId>
+			<artifactId>gluwa-sdk-java</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.web3j</groupId>
@@ -47,6 +72,48 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>4.4.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-java</artifactId>
+			<version>7.2.3</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-java8</artifactId>
+			<version>7.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-junit</artifactId>
+			<version>7.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-testng</artifactId>
+			<version>7.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>cucumber-expressions</artifactId>
+			<version>12.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.cucumber</groupId>
+			<artifactId>datatable</artifactId>
+			<version>3.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.19.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 			<version>1.10.19</version>
@@ -58,8 +125,56 @@
 			<version>1.2.3</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>5.7.0</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>net.masterthought</groupId>
+					<artifactId>maven-cucumber-reporting</artifactId>
+					<version>5.6.0</version>
+					<executions>
+						<execution>
+							<id>execution</id>
+							<phase>verify</phase>
+							<goals>
+								<goal>generate</goal>
+							</goals>
+							<configuration>
+								<projectName>cucumberReporting</projectName>
+								<skip>false</skip>
+								<outputDirectory>${project.build.directory}</outputDirectory>
+								<inputDirectory>${project.build.directory}</inputDirectory>
+								<jsonFiles>
+									<param>**/*.json</param>
+								</jsonFiles>
+								<mergeFeaturesById>false</mergeFeaturesById>
+								<mergeFeaturesWithRetest>false</mergeFeaturesWithRetest>
+								<checkBuildResult>false</checkBuildResult>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.0.0-M7</version>
+					<configuration>
+						<argLine>-Dlog4j.configurationFile=</argLine>
+						<includes>
+							<include>**/GluwaApiSDKImplTest*.java</include>
+						</includes>
+						<argLine>-Dlog4j.configuration=</argLine>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

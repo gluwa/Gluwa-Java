@@ -5,9 +5,13 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "GluwaSDK-UnitTests" ]
+    branches:
+      - 'feature/**'
+      - 'master'
   pull_request:
-    branches: [ "GluwaSDK-UnitTests" ]
+    branches:
+      - 'feature/**'
+      - 'master'
   workflow_dispatch:
 
 jobs:
@@ -15,15 +19,57 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      CUCUMBER_PUBLISH_TOKEN: ${{ secrets.CUCUMBER_PUBLISH_TOKEN }}
+      API_KEY_PROD: ${{ secrets.API_KEY_PROD }}
+      API_KEY_SANDBOX: ${{ secrets.API_KEY_SANDBOX }}
+      API_KEY_TEST: ${{ secrets.API_KEY_TEST }}
+      API_SECRET_PROD: ${{ secrets.API_SECRET_PROD }}
+      API_SECRET_SANDBOX: ${{ secrets.API_SECRET_SANDBOX }}
+      API_SECRET_TEST: ${{ secrets.API_SECRET_TEST }}
+      DEFAULT_PRIVATE: ${{ secrets.DEFAULT_PRIVATE }}
+      SRC_PRIVATE_BTC_PROD: ${{ secrets.SRC_PRIVATE_BTC_PROD }}
+      SRC_PRIVATE_BTC_SANDBOX: ${{ secrets.SRC_PRIVATE_BTC_SANDBOX }}
+      SRC_PRIVATE_NGNG_PROD: ${{ secrets.SRC_PRIVATE_GENERAL }}
+      SRC_PRIVATE_NGNG_SANDBOX: ${{ secrets.SRC_PRIVATE_GENERAL }}
+      SRC_PRIVATE_sNGNG_PROD: ${{ secrets.SRC_PRIVATE_GENERAL }}
+      SRC_PRIVATE_sNGNG_SANDBOX: ${{ secrets.SRC_PRIVATE_GENERAL }}
+      SRC_PRIVATE_sUSDCG_PROD: ${{ secrets.SRC_PRIVATE_sUSDCG_PROD }}
+      SRC_PRIVATE_sUSDCG_SANDBOX: ${{ secrets.SRC_PRIVATE_sUSDCG_SANDBOX }}
+      TRG_PRIVATE_BTC_PROD: ${{ secrets.TRG_PRIVATE_BTC_PROD }}
+      TRG_PRIVATE_BTC_SANDBOX: ${{ secrets.TRG_PRIVATE_BTC_SANDBOX }}
+      TRG_PRIVATE_sUSDCG_PROD: ${{ secrets.TRG_PRIVATE_GENERAL }}
+      TRG_PRIVATE_sUSDCG_SANDBOX: ${{ secrets.TRG_PRIVATE_GENERAL }}
+
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 11
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Set up JDK
       uses: actions/setup-java@v3
       with:
-        java-version: '11'
+        java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
-      run: mvn build
+
+    - name: Install with Maven
+      working-directory: gluwa-java
+      run: mvn install -DskipTests
+      
     - name: Test with Maven
-      run: mvn clean test
+      working-directory: gluwa-java
+      run: mvn test
+
+    - name: Cucumber report annotations
+      uses: deblockt/cucumber-report-annotations-action@v1.7
+      if: always()
+      with:
+        access-token: ${{ secrets.GITHUB_TOKEN }}
+        path: "**/report.json"
+
+    - name: Deploy report page to GitHub Page
+      if: always()
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: gluwa-java/target/cucumber

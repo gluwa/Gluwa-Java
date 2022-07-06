@@ -3,7 +3,7 @@ target
 .settings
 .DS_Store
 .project
-gluwa-java/src/test
+gluwa-sdk-java.iml
 gluwa-java-mock
 
 # Legacy Eclipse project files
@@ -11,6 +11,7 @@ gluwa-java-mock
 .project
 .cproject
 .settings/
+.idea
 
 # Visual Studio
 .vs/*
@@ -26,3 +27,6 @@ gluwa-java-mock
 !.vscode/launch.json
 !.vscode/extensions.json
 .history
+gluwa-java/src/test/resources/envVariables.properties
+gluwa-java/src/test/properties
+*.properties
