@@ -40,6 +40,7 @@ final class GluwaApiService {
 	private final static String apiHostDev = "https://sandbox.api.gluwa.com";
 
 	protected final static String V1_PATH_QRCODE = "/v1/QRCode";
+	protected final static String V1_PATH_QRCODE_PAYLOAD = "/v1/QRCode/payload";
 	protected final static String V1_PATH_ADDRESS = "/v1/{Currency}/Addresses/";
 	protected final static String V1_PATH_FEE = "/v1/{Currency}/fee?amount={Amount}";
 	protected final static String V1_PATH_TRANSACTION = "/v1/Transactions";
