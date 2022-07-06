@@ -52,7 +52,6 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 	 */
 	@Override
 	public GluwaResponse getPaymentQRCode(GluwaTransaction transaction) {
-
 		Header h1 = new BasicHeader("Content-Type", "application/json");
 		Header h2 = new BasicHeader("Authorization", "Basic " + configuration.getAuthorization());
 
@@ -77,7 +76,40 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 			throw new GluwaSDKException(e);
 		}
 		return result;
+	}
 
+	/**
+	 * Returns Payment QR Code, base 64 encoded string with Payload.
+	 *
+	 * @param transaction
+	 * @return api response
+	 */
+	@Override
+	public GluwaResponse getPaymentQRCodeWithPayload(GluwaTransaction transaction) {
+		Header h1 = new BasicHeader("Content-Type", "application/json");
+		Header h2 = new BasicHeader("Authorization", "Basic " + configuration.getAuthorization());
+
+		HashMap<String, Object> params = new HashMap<>();
+		params.put("Signature", timestampSignature());
+		params.put("Currency", transaction.getCurrency().toString());
+		params.put("Target", configuration.getMasterEthereumAddress());
+		params.put("Amount", transaction.getAmount());
+		if (transaction.getMerchantOrderID() != null)
+			params.put("MerchantOrderID", transaction.getMerchantOrderID());
+		if (transaction.getNote() != null)
+			params.put("Note", transaction.getNote());
+		if (transaction.getExpiry() != 0)
+			params.put("Expiry", transaction.getExpiry());
+
+		GluwaResponse result = new GluwaResponse();
+		try {
+			result = api.post(GluwaApiService.V1_PATH_QRCODE_PAYLOAD, GluwaApiService.ParameterType.JSON, params, h1, h2);
+		} catch (Exception e) {
+			LOGGER.info("GluwaTransaction:{}", transaction);
+			LOGGER.error(e.getMessage(), e);
+			throw new GluwaSDKException(e);
+		}
+		return result;
 	}
 
 	@Override
