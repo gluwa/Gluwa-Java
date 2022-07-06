@@ -9,13 +9,16 @@ import static org.junit.Assert.assertNotNull;
 
 public class TransactionTests {
 
+    static Configuration conf = new ConfigurationForTest();
+    static GluwaApiSDKImpl wrapper = new GluwaApiSDKImpl(conf);
+    static GluwaTransaction transaction = new GluwaTransaction();
+
     /***
      * @description = Positive test to post transaction with USDCG token
      * @return = Base64 PNG format QR code
      */
-    public GluwaResponse postTransactionTest_Pos(Currency currency) {
-        GluwaApiSDKImpl wrapper = new GluwaApiSDKImpl(new ConfigurationForTest());
-        GluwaTransaction transaction = new GluwaTransaction();
+    public GluwaResponse postTransactionTest(Currency currency) {
+        GluwaApiSDKImpl gluwaApiSDK = new GluwaApiSDKImpl(new ConfigurationForTest());
 
         transaction.setCurrency(currency); // Currency.KRWG, Currency.NGNG
         transaction.setAmount("1");
@@ -23,7 +26,7 @@ public class TransactionTests {
         transaction.setNote("This is the Test");
         transaction.setMerchantOrderID("My Order Id:20200101");
         transaction.setIdem(UUID.randomUUID());
-        return wrapper.postTransaction(transaction);
+        return gluwaApiSDK.postTransaction(transaction);
     }
 
     /***
@@ -31,24 +34,16 @@ public class TransactionTests {
      * @return = Base64 PNG format QR code
      */
     public GluwaResponse getPaymentQRCodeTest_Pos() {
-        Configuration conf = new ConfigurationForTest();
-        GluwaApiSDKImpl sdkImpl = new GluwaApiSDKImpl(conf);
-
-        GluwaTransaction transaction = new GluwaTransaction();
         transaction.setCurrency(Currency.USDCG);
         transaction.setAmount("51");
         transaction.setExpiry(1800);
-        return sdkImpl.getPaymentQRCode(transaction);
+        return wrapper.getPaymentQRCode(transaction);
     }
 
     /***
      * When PR for this method is merged to master, this test will be refactored correctly
      */
     public void getPaymentQRCodeWithPayloadTest_Pos() {
-        Configuration conf = new ConfigurationForTest();
-        GluwaApiSDKImpl sdkImpl = new GluwaApiSDKImpl(conf);
-
-        GluwaTransaction transaction = new GluwaTransaction();
         transaction.setCurrency(Currency.USDCG);
         transaction.setAmount("51");
         transaction.setExpiry(1800);
@@ -59,11 +54,7 @@ public class TransactionTests {
     /***
      * When PR for this method is merged to master, this test will be refactored correctly
      */
-    public static GluwaResponse getListTransactionHistoryTest_Pos(Currency currency) {
-        Configuration conf = new ConfigurationForTest();
-        GluwaApiSDKImpl wrapper = new GluwaApiSDKImpl(conf);
-
-        GluwaTransaction transaction = new GluwaTransaction();
+    public static GluwaResponse getListTransactionHistoryTest(Currency currency) {
         transaction.setCurrency(currency);
         transaction.setLimit(2);
         transaction.setStatus("Confirmed");
@@ -72,17 +63,15 @@ public class TransactionTests {
     }
 
     public GluwaResponse getListTransactionDetail_test(Currency currency) {
-        Configuration conf = new ConfigurationForTest();
-        GluwaApiSDKImpl wrapper = new GluwaApiSDKImpl(conf);
-
-        GluwaResponse transactionList = getListTransactionHistoryTest_Pos(currency);
+        GluwaResponse transactionList = getListTransactionHistoryTest(currency);
         String txnHash = transactionList.getMapList().get(0).get("TxnHash").toString();
-
-        GluwaTransaction transaction = new GluwaTransaction();
         transaction.setCurrency(currency);
         transaction.setTxnHash(txnHash);
-
-        GluwaResponse result = wrapper.getListTransactionDetail(transaction);
         return wrapper.getListTransactionDetail(transaction);
+    }
+
+    public GluwaResponse getAddressTest(Currency currency) {
+        transaction.setCurrency(currency);
+        return wrapper.getAddresses(transaction);
     }
 }

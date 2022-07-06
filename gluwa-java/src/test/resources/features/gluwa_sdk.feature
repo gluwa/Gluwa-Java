@@ -38,6 +38,18 @@
         | NGNG     |
         | sNGNG    |
 
+#   TO-DO: After exception handler added to SDK, bad request validation to be added
+    @gluwaSdk6
+    Scenario: Get List of Transactions negative test
+      When I get list of transactions for invalid currency "GCRE"
+#      Then I validate bad request response
+#      Examples:
+#        | Currency |
+#        | USDCG    |
+#        | sUSDCG   |
+#        | NGNG     |
+#        | sNGNG    |
+
     @gluwaSdk7
     Scenario Outline: Get transaction details by hash happy path
       When I get a transaction by hash for "<Currency>"
@@ -50,10 +62,22 @@
         | sNGNG    |
 
 #  TO-DO: As soon as master is pulled, add this test
-#      @gluwaSdk9
+#      @gluwaSdk10
 #      Scenario: Get payment QR code with Payload happy path
 #        When I get payment QR code with Payload via Gluwa SDK
 #        Then I validate get response
+
+    @gluwaSdk11
+    Scenario Outline: Get Address for currencies happy path
+      When I get address via Gluwa SDK for "<Currency>"
+      Then I validate get response
+      Examples:
+        | Currency |
+        | USDCG    |
+        | sUSDCG   |
+        | NGNG     |
+        | sNGNG    |
+
 
 
 

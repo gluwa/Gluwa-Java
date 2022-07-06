@@ -2,9 +2,14 @@ package definitions;
 
 import com.gluwa.sdk.Currency;
 import com.gluwa.sdk.GluwaResponse;
+import com.gluwa.sdk.GluwaSDKException;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import com.gluwa.sdk.TransactionTests;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 //import static org.junit.Assert.*;
@@ -13,10 +18,12 @@ public class GluwaSdkStepDefs {
 
     TransactionTests txTest = new TransactionTests();
     GluwaResponse result;
+    ObjectMapper objectMapper = new ObjectMapper();
+    Map<String, String> map = new HashMap<>();
 
     @When("I post transaction via Gluwa SDK for \"([^\"]*)\"$")
     public void iPostTransactionViaGluwaSDKForCurrency(Currency currency) {
-        result = txTest.postTransactionTest_Pos(currency);
+        result = txTest.postTransactionTest(currency);
         System.out.println("=====================================");
         System.out.println("Status code: " + result.getCode());
     }
@@ -42,7 +49,7 @@ public class GluwaSdkStepDefs {
 
     @When("I get list of transactions for \"([^\"]*)\"$")
     public void iGetListOfTransactionsFor(Currency currency) {
-        result = TransactionTests.getListTransactionHistoryTest_Pos(currency);
+        result = TransactionTests.getListTransactionHistoryTest(currency);
         System.out.println("=====================================");
         System.out.println("Status code: " + result.getCode());
         System.out.println("List of Transactions: " + result.getMapList());
@@ -67,20 +74,46 @@ public class GluwaSdkStepDefs {
     @When("I post transaction via Gluwa SDK using invalid currency as \"([^\"]*)\"$")
     public void iPostTransactionViaGluwaSDKUsingInvalidCurrencyAs(Currency invalidCurrency) {
         try {
-            result = txTest.postTransactionTest_Pos(invalidCurrency);
+            result = txTest.postTransactionTest(invalidCurrency);
             System.out.println("=====================================");
             System.out.println("Status code: " + result.getCode());
             System.out.println("REASON: " + result.getReason());
             System.out.println("RESPONSE BODY: " + result.getBody());
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
     }
 
     @Then("I validate bad request response")
     public void iValidateBadRequestResponse() {
-        assertThat(result.getCode()).isEqualTo(400);
+        assertThat(map.get("Code")).isEqualTo("BadRequest");
+        assertThat(map.get("Message")).isEqualTo("Unsupported currency GCRE.");
         //assertThat(result.getReason()).isEqualTo("OK");
     }
 
+    @When("I get list of transactions for invalid currency \"([^\"]*)\"$")
+    public void iGetListOfTransactionsForInvalidCurrency(Currency invalidCurrency) {
+        try {
+            result = txTest.postTransactionTest(invalidCurrency);
+            System.out.println("=====================================");
+            System.out.println("Status code: " + result.getCode());
+            System.out.println("REASON: " + result.getReason());
+            System.out.println("RESPONSE BODY: " + result.getBody());
+        } catch (Exception e) {
+            try {
+                map = objectMapper.readValue(e.getMessage(), Map.class);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        }
+    }
+
+    @When("I get address via Gluwa SDK for \"([^\"]*)\"$")
+    public void iGetAddressViaGluwaSDK(Currency currency) {
+        result = txTest.getAddressTest(currency);
+        System.out.println("=====================================");
+        System.out.println("Status code: " + result.getCode());
+        System.out.println("REASON: " + result.getReason());
+        System.out.println("RESPONSE BODY: " + result.getBody());
+    }
 }
