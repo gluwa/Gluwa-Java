@@ -58,7 +58,7 @@ jobs:
       
     - name: Test with Maven
       working-directory: gluwa-java
-      run: mvn test -e
+      run: mvn test
 
     - name: Cucumber report annotations
       uses: deblockt/cucumber-report-annotations-action@v1.7
