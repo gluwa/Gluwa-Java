@@ -54,12 +54,6 @@ public class ConfigurationForTest extends Configuration {
         } else {
             return false;
         }
-//        String os = System.getProperty("os.name").toLowerCase();
-//        if (os.contains("win") ||  os.contains("mac")) {
-//            return true;
-//        } else {
-//            return false;
-//        }
     }
 
     private static boolean isRanOnWin() {
