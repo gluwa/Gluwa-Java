@@ -55,10 +55,16 @@ public class ConfigurationForTest extends Configuration {
         }
     }
 
+    private static boolean isRanOnWin() {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private static String getPropertyfromEnv(String name){
-//        if (name.equals("SRC_PRIVATE_sNGNG_PROD")){
-//            return getEthAddress(System.getenv(name));
-//        } else {
         return (System.getenv(name));
     }
 
@@ -66,8 +72,14 @@ public class ConfigurationForTest extends Configuration {
         String property;
         Properties prop = new Properties();
         try {
-            InputStream ip = new FileInputStream("C:\\GluwaDev\\Gluwa-Java\\gluwa-java\\src\\test\\resources\\properties\\config.properties");
-            prop.load(ip);
+            String dir = System.getProperty("user.dir");
+            if (isRanOnWin()) {
+                InputStream ip = new FileInputStream(dir+"\\src\\test\\resources\\properties\\config.properties");
+                prop.load(ip);
+            } else {
+                InputStream ip = new FileInputStream(dir+"/src/test/resources/properties/config.properties");
+                prop.load(ip);
+            }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e){
@@ -75,12 +87,6 @@ public class ConfigurationForTest extends Configuration {
         }
         property = prop.getProperty(name);
         return property;
-    }
-
-    public static void main (String[] args){
-        String os = System.getProperty("os.name").toLowerCase();
-        System.out.println(getEthAddress(getProperty("SRC_PRIVATE_sNGNG_PROD")));
-        System.out.println(os);
     }
 }
 
