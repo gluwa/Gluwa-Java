@@ -313,7 +313,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 
 	protected String hashTransaction(GluwaTransaction transaction) {
 
-		String[] contractAddressData = api.getContractAddressData(transaction.getCurrency());
+		String[] contractAddressData = this.api.getContractAddressData(transaction.getCurrency());
 
 		StringBuffer sb = new StringBuffer();
 

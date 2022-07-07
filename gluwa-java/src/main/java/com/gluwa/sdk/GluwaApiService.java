@@ -108,9 +108,14 @@ final class GluwaApiService {
 			}
 			br.close();
 
+			if (responseCode != 200) {
+				LOGGER.warn("Exception:{}", br.toString());
+				throw new GluwaSDKException(br.toString());
+			}
+
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("response:{}", responseStr);
-
+			
 			JSONObject responseJson = new JSONObject(responseStr.toString());
 
 			return new String[] {
@@ -119,8 +124,9 @@ final class GluwaApiService {
 				responseJson.getNumber("Decimals").toString() // Decimals
 			};
 		} catch (Exception e) {
-			System.out.println(e);
-			return new String[]{null, null, null};
+			LOGGER.warn("caught Exception: {}", e);
+			// return new String[]{null, null, null};
+			throw new GluwaSDKException(e);
 		}
 	}
 
