@@ -8,6 +8,7 @@ on:
     branches:
       - 'feature/**'
       - 'master'
+      - 'QA-130-SDK-UnitTests'
   pull_request:
     branches:
       - 'feature/**'

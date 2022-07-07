@@ -47,12 +47,19 @@ public class ConfigurationForTest extends Configuration {
     }
 
     private static boolean isRanLocally(){
-        String os = System.getProperty("os.name").toLowerCase();
-        if (os.contains("win") ||  os.contains("mac")) {
+
+        boolean githubActionsVar = Boolean.parseBoolean(System.getProperty("GITHUB_ACTIONS"));
+        if (githubActionsVar) {
             return true;
         } else {
             return false;
         }
+//        String os = System.getProperty("os.name").toLowerCase();
+//        if (os.contains("win") ||  os.contains("mac")) {
+//            return true;
+//        } else {
+//            return false;
+//        }
     }
 
     private static boolean isRanOnWin() {
