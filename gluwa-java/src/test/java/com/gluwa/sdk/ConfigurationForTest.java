@@ -45,14 +45,9 @@ public class ConfigurationForTest extends Configuration {
     }
 
     private static boolean isRanLocally(){
-        boolean githubActionsVar = Boolean.parseBoolean(System.getProperty("GITHUB_ACTIONS"));
+        boolean githubActionsVar = Boolean.parseBoolean(System.getenv("GITHUB_ACTIONS"));
         return !githubActionsVar;
     }
-
-//    private static boolean isRanOnWin() {
-//        String os = System.getProperty("os.name").toLowerCase();
-//        return os.contains("win");
-//    }
 
     private static String getPropertyfromEnv(String name){
         return (System.getenv(name));
@@ -66,13 +61,6 @@ public class ConfigurationForTest extends Configuration {
             String separator = File.separator;
             FileInputStream ip = new FileInputStream(String.join(separator,dir,"src","test","resources","properties","config.properties"));
             prop.load(ip);
-//            if (isRanOnWin()) {
-//                InputStream ip = new FileInputStream(dir+"\\src\\test\\resources\\properties\\config.properties");
-//                prop.load(ip);
-//            } else {
-//                InputStream ip = new FileInputStream(dir+"/src/test/resources/properties/config.properties");
-//                prop.load(ip);
-//            }
         } catch (IOException e) {
             e.printStackTrace();
         }
