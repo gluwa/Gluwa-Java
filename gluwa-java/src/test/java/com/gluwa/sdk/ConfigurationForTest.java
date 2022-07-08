@@ -3,10 +3,9 @@ package com.gluwa.sdk;
 import org.web3j.crypto.Credentials;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
+import java.io.File;
 
 public class ConfigurationForTest extends Configuration {
 
@@ -28,8 +27,7 @@ public class ConfigurationForTest extends Configuration {
 
     private static String getEthAddress(String privateKey){
         Credentials cs = Credentials.create(privateKey);
-        String publicAddress = cs.getAddress();
-        return (publicAddress);
+        return (cs.getAddress());
     }
 
     private static String getProperty(String name){
@@ -47,23 +45,14 @@ public class ConfigurationForTest extends Configuration {
     }
 
     private static boolean isRanLocally(){
-
         boolean githubActionsVar = Boolean.parseBoolean(System.getProperty("GITHUB_ACTIONS"));
-        if (githubActionsVar) {
-            return true;
-        } else {
-            return false;
-        }
+        return !githubActionsVar;
     }
 
-    private static boolean isRanOnWin() {
-        String os = System.getProperty("os.name").toLowerCase();
-        if (os.contains("win")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+//    private static boolean isRanOnWin() {
+//        String os = System.getProperty("os.name").toLowerCase();
+//        return os.contains("win");
+//    }
 
     private static String getPropertyfromEnv(String name){
         return (System.getenv(name));
@@ -74,16 +63,17 @@ public class ConfigurationForTest extends Configuration {
         Properties prop = new Properties();
         try {
             String dir = System.getProperty("user.dir");
-            if (isRanOnWin()) {
-                InputStream ip = new FileInputStream(dir+"\\src\\test\\resources\\properties\\config.properties");
-                prop.load(ip);
-            } else {
-                InputStream ip = new FileInputStream(dir+"/src/test/resources/properties/config.properties");
-                prop.load(ip);
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e){
+            String separator = File.separator;
+            FileInputStream ip = new FileInputStream(String.join(separator,dir,"src","test","resources","properties","config.properties"));
+            prop.load(ip);
+//            if (isRanOnWin()) {
+//                InputStream ip = new FileInputStream(dir+"\\src\\test\\resources\\properties\\config.properties");
+//                prop.load(ip);
+//            } else {
+//                InputStream ip = new FileInputStream(dir+"/src/test/resources/properties/config.properties");
+//                prop.load(ip);
+//            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
         property = prop.getProperty(name);
