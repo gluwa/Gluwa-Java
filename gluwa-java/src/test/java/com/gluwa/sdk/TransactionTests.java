@@ -74,4 +74,12 @@ public class TransactionTests {
         transaction.setCurrency(currency);
         return wrapper.getAddresses(transaction);
     }
+
+    public GluwaResponse getFee_test(Currency currency) {
+        transaction.setCurrency(Currency.USDCG);
+        transaction.setAmount("51");
+
+        GluwaResponse result = wrapper.getFee(transaction);
+        return result;
+    }
 }

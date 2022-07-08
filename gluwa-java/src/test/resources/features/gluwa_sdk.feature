@@ -78,6 +78,15 @@
         | NGNG     |
         | sNGNG    |
 
-
+    @gluwaSdk12
+    Scenario Outline: Get fee for currency Positive
+      When I get fee for currency "<Currency>"
+      Then I validate get response
+      Examples:
+        | Currency |
+        | USDCG    |
+        | sUSDCG   |
+        | NGNG     |
+        | sNGNG    |
 
 
