@@ -43,12 +43,6 @@
     Scenario: Get List of Transactions negative test
       When I get list of transactions for invalid currency "GCRE"
 #      Then I validate bad request response
-#      Examples:
-#        | Currency |
-#        | USDCG    |
-#        | sUSDCG   |
-#        | NGNG     |
-#        | sNGNG    |
 
     @gluwaSdk7
     Scenario Outline: Get transaction details by hash happy path
@@ -61,11 +55,16 @@
         | NGNG     |
         | sNGNG    |
 
-#  TO-DO: As soon as master is pulled, add this test
-#      @gluwaSdk10
-#      Scenario: Get payment QR code with Payload happy path
-#        When I get payment QR code with Payload via Gluwa SDK
-#        Then I validate get response
+      @gluwaSdk10
+      Scenario Outline: Get payment QR code with Payload happy path
+        When I get payment QR code with Payload via Gluwa SDK for "<Currency>"
+        Then I validate get response
+        Examples:
+          | Currency |
+          | USDCG    |
+          | sUSDCG   |
+          | NGNG     |
+          | sNGNG    |
 
     @gluwaSdk11
     Scenario Outline: Get Address for currencies happy path

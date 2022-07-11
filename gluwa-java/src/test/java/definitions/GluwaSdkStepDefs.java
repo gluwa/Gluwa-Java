@@ -125,4 +125,13 @@ public class GluwaSdkStepDefs {
         System.out.println("REASON: " + result.getReason());
         System.out.println("RESPONSE BODY: " + result.getBody());
     }
+
+    @When("I get payment QR code with Payload via Gluwa SDK for \"([^\"]*)\"$")
+    public void iGetPaymentQRCodeWithPayloadViaGluwaSDK(Currency currency) {
+        result = txTest.getPaymentQRCodeWithPayloadTest_Pos(currency);
+        System.out.println("=====================================");
+        System.out.println("Status code: " + result.getCode());
+        System.out.println("REASON: " + result.getReason());
+        System.out.println("RESPONSE BODY: " + result.getBody());
+    }
 }
