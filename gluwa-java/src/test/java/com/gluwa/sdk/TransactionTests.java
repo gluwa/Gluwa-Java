@@ -43,12 +43,13 @@ public class TransactionTests {
     /***
      * When PR for this method is merged to master, this test will be refactored correctly
      */
-    public void getPaymentQRCodeWithPayloadTest_Pos() {
-        transaction.setCurrency(Currency.USDCG);
-        transaction.setAmount("51");
+    public GluwaResponse getPaymentQRCodeWithPayloadTest_Pos(Currency currency) {
+        transaction.setCurrency(currency);
+        transaction.setAmount("102");
         transaction.setExpiry(1800);
+        transaction.setFee("1");
         // getPaymentQRCode API returns QR code png image as a Base64 string and payload.
-        //return sdkImpl.getPaymentQRCodeWithPayload(transaction);
+        return wrapper.getPaymentQRCodeWithPayload(transaction);
     }
 
     /***
@@ -73,5 +74,13 @@ public class TransactionTests {
     public GluwaResponse getAddressTest(Currency currency) {
         transaction.setCurrency(currency);
         return wrapper.getAddresses(transaction);
+    }
+
+    public GluwaResponse getFee_test(Currency currency) {
+        transaction.setCurrency(Currency.USDCG);
+        transaction.setAmount("51");
+
+        GluwaResponse result = wrapper.getFee(transaction);
+        return result;
     }
 }
