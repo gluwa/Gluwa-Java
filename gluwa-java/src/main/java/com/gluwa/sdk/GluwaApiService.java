@@ -108,15 +108,14 @@ final class GluwaApiService {
 			}
 			br.close();
 
-			if (responseCode != 200) {
-				LOGGER.warn("Exception:{}", br.toString());
-				throw new GluwaSDKException(br.toString());
-			}
+			JSONObject responseJson = new JSONObject(responseStr.toString());
 
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("response:{}", responseStr);
-			
-			JSONObject responseJson = new JSONObject(responseStr.toString());
+
+			if (responseCode < 200 || responseCode > 300) {
+				throw new GluwaSDKNetworkException(responseCode, responseStr.toString());
+			}
 
 			return new String[] {
 				responseJson.getString("Address"), // Address
@@ -165,9 +164,8 @@ final class GluwaApiService {
 				response.setBody(sb.toString());
 
 				if (httpResponse.getCode() < 200 || httpResponse.getCode() > 300) {
-					throw new GluwaSDKException(httpResponse.getReasonPhrase() + " " + response.getBody());
+					throw new GluwaSDKNetworkException(httpResponse.getCode(), response.getBody());
 				} else {
-
 					if (response.getBody() != null && response.getBody().length() > 0
 							&& response.getContentType().toLowerCase().contains("application/json")) {
 
@@ -241,9 +239,8 @@ final class GluwaApiService {
 				response.setBody(sb.toString());
 
 				if (httpResponse.getCode() < 200 || httpResponse.getCode() > 300) {
-					throw new GluwaSDKException(httpResponse.getReasonPhrase() + " " + response.getBody());
+					throw new GluwaSDKNetworkException(httpResponse.getCode(), response.getBody());
 				} else {
-
 					if (response.getBody() != null && response.getBody().length() > 0
 							&& response.getContentType().toLowerCase().contains("application/json")) {
 
