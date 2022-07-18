@@ -3,6 +3,7 @@ package definitions;
 import com.gluwa.sdk.Currency;
 import com.gluwa.sdk.GluwaResponse;
 import com.gluwa.sdk.GluwaSDKException;
+import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import com.gluwa.sdk.TransactionTests;
@@ -20,6 +21,8 @@ public class GluwaSdkStepDefs {
     GluwaResponse result;
     ObjectMapper objectMapper = new ObjectMapper();
     Map<String, String> map = new HashMap<>();
+
+    private Currency cryptoCurrency;
 
     @When("I post transaction via Gluwa SDK for \"([^\"]*)\"$")
     public void iPostTransactionViaGluwaSDKForCurrency(Currency currency) {
@@ -47,21 +50,14 @@ public class GluwaSdkStepDefs {
         assertThat(result.getReason()).isEqualTo("OK");
     }
 
-    @When("I get list of transactions with {} status for {}")
-    public void iGetListOfTransactionsFor(String status, Currency currency) {
-        result = TransactionTests.getListTransactionHistoryTest(status, currency);
+    @When("I get list of transactions with {string} status for {string}")
+    public void iGetListOfTransactionsFor(String status, String currency) {
+        cryptoCurrency = Currency.valueOf(currency);
+        result = TransactionTests.getListTransactionHistoryTest(status, cryptoCurrency);
         System.out.println("=====================================");
         System.out.println("Status code: " + result.getCode());
         System.out.println("List of Transactions: " + result.getMapList());
     }
-
-//    @When("I get a \"([^\"]*)\"$ transaction by \"hash\"")
-//    public void iGetTransactionByHash(Currency currency, String hash){
-//        result = txTest.getListTransactionDetail_test(currency, hash);
-//        System.out.println("=====================================");
-//        System.out.println("Status code: " + result.getCode());
-//        System.out.println("Transaction details: " + result.getMapList());
-//    }
 
     @When("I get a transaction by hash for \"([^\"]*)\"$")
     public void iGetATransactionBy(Currency currency) {
@@ -91,10 +87,11 @@ public class GluwaSdkStepDefs {
         //assertThat(result.getReason()).isEqualTo("OK");
     }
 
-    @When("I get list of transactions for invalid currency \"([^\"]*)\"$")
-    public void iGetListOfTransactionsForInvalidCurrency(Currency invalidCurrency) {
+    @When("I get list of transactions for invalid currency {string}")
+    public void iGetListOfTransactionsForInvalidCurrency(String invalidCurrency) {
+        cryptoCurrency = Currency.valueOf(invalidCurrency);
         try {
-            result = txTest.postTransactionTest(invalidCurrency);
+            result = txTest.postTransactionTest(cryptoCurrency);
             System.out.println("=====================================");
             System.out.println("Status code: " + result.getCode());
             System.out.println("REASON: " + result.getReason());
