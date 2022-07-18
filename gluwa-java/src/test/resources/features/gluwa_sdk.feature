@@ -27,9 +27,11 @@
       When I get payment QR code via Gluwa SDK
       Then I validate get response
 
+
+#   TO-DO: Handle cucumber exception with Cucumber version 3
     @gluwaSdk5
-    Scenario Outline: Get List of Transactions happy path
-      When I get list of transactions for "<Currency>"
+    Scenario Outline: Get transaction history for currencies with Complete status
+      When I get list of transactions with "Complete" status for "<Currency>"
       Then I validate get response
       Examples:
         | Currency |

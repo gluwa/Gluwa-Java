@@ -47,9 +47,9 @@ public class GluwaSdkStepDefs {
         assertThat(result.getReason()).isEqualTo("OK");
     }
 
-    @When("I get list of transactions for \"([^\"]*)\"$")
-    public void iGetListOfTransactionsFor(Currency currency) {
-        result = TransactionTests.getListTransactionHistoryTest(currency);
+    @When("I get list of transactions with {} status for {}")
+    public void iGetListOfTransactionsFor(String status, Currency currency) {
+        result = TransactionTests.getListTransactionHistoryTest(status, currency);
         System.out.println("=====================================");
         System.out.println("Status code: " + result.getCode());
         System.out.println("List of Transactions: " + result.getMapList());
