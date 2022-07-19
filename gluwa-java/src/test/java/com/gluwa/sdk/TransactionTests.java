@@ -55,16 +55,16 @@ public class TransactionTests {
     /***
      * When PR for this method is merged to master, this test will be refactored correctly
      */
-    public static GluwaResponse getListTransactionHistoryTest(Currency currency) {
+    public static GluwaResponse getListTransactionHistoryTest(String status, Currency currency) {
         transaction.setCurrency(currency);
         transaction.setLimit(2);
-        transaction.setStatus("Confirmed");
+        transaction.setStatus(status);
         transaction.setOffset(0);
         return wrapper.getListTransactionHistory(transaction);
     }
 
     public GluwaResponse getListTransactionDetail_test(Currency currency) {
-        GluwaResponse transactionList = getListTransactionHistoryTest(currency);
+        GluwaResponse transactionList = getListTransactionHistoryTest("Confirmed", currency);
         String txnHash = transactionList.getMapList().get(0).get("TxnHash").toString();
         transaction.setCurrency(currency);
         transaction.setTxnHash(txnHash);

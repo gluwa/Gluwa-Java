@@ -27,24 +27,30 @@
       When I get payment QR code via Gluwa SDK
       Then I validate get response
 
+
+#   TO-DO: Refactor to modern cucumber expression
     @gluwaSdk5
-    Scenario Outline: Get List of Transactions happy path
-      When I get list of transactions for "<Currency>"
+    Scenario Outline: Get transaction history for currencies with Complete status
+      When I get list of transactions with "<Status>" status for "<Currency>"
       Then I validate get response
       Examples:
-        | Currency |
-        | USDCG    |
-        | sUSDCG   |
-        | NGNG     |
-        | sNGNG    |
+        | Currency | Status     |
+        | USDCG    | Confirmed  |
+        | sUSDCG   | Confirmed  |
+        | NGNG     | Confirmed  |
+        | sNGNG    | Confirmed  |
+        | USDCG    | Incomplete |
+        | sUSDCG   | Incomplete |
+        | NGNG     | Incomplete |
+        | sNGNG    | Incomplete |
 
 #   TO-DO: After exception handler added to SDK, bad request validation to be added
-    @gluwaSdk6
+    @gluwaSdk7
     Scenario: Get List of Transactions negative test
       When I get list of transactions for invalid currency "GCRE"
 #      Then I validate bad request response
 
-    @gluwaSdk7
+    @gluwaSdk8
     Scenario Outline: Get transaction details by hash happy path
       When I get a transaction by hash for "<Currency>"
       Then I validate get response
