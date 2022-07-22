@@ -70,7 +70,12 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		GluwaResponse result = new GluwaResponse();
 		try {
 			result = api.post(GluwaApiService.V1_PATH_QRCODE, GluwaApiService.ParameterType.JSON, params, h1, h2);
-		} catch (Exception e) {
+		} catch(GluwaSDKNetworkException networkException) {
+			LOGGER.info("GluwaTransaction:", transaction);
+			LOGGER.error(networkException.getMessage(), networkException);
+			throw networkException;
+		}
+		catch (Exception e) {
 			LOGGER.info("GluwaTransaction:{}", transaction);
 			LOGGER.error(e.getMessage(), e);
 			throw new GluwaSDKException(e);
@@ -104,7 +109,12 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		GluwaResponse result = new GluwaResponse();
 		try {
 			result = api.post(GluwaApiService.V1_PATH_QRCODE_PAYLOAD, GluwaApiService.ParameterType.JSON, params, h1, h2);
-		} catch (Exception e) {
+		} catch(GluwaSDKNetworkException networkException) {
+			LOGGER.info("GluwaTransaction:", transaction);
+			LOGGER.error(networkException.getMessage(), networkException);
+			throw networkException;
+		}
+		catch (Exception e) {
 			LOGGER.info("GluwaTransaction:{}", transaction);
 			LOGGER.error(e.getMessage(), e);
 			throw new GluwaSDKException(e);
@@ -123,7 +133,12 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		GluwaResponse result = new GluwaResponse();
 		try {
 			result = api.get(path, h1, h2);
-		} catch (Exception e) {
+		} catch(GluwaSDKNetworkException networkException) {
+			LOGGER.info("GluwaTransaction:", transaction);
+			LOGGER.error(networkException.getMessage(), networkException);
+			throw networkException;
+		}
+		catch (Exception e) {
 			LOGGER.info("GluwaTransaction:{}", transaction);
 			LOGGER.error(e.getMessage(), e);
 			throw new GluwaSDKException(e);
@@ -142,7 +157,12 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		GluwaResponse result = new GluwaResponse();
 		try {
 			result = api.get(path, h1, h2);
-		} catch (Exception e) {
+		} catch(GluwaSDKNetworkException networkException) {
+			LOGGER.info("GluwaTransaction:", transaction);
+			LOGGER.error(networkException.getMessage(), networkException);
+			throw networkException;
+		}
+		catch (Exception e) {
 			LOGGER.info("GluwaTransaction:{}", transaction);
 			LOGGER.error(e.getMessage(), e);
 			throw new GluwaSDKException(e);
@@ -185,11 +205,17 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 
 		try {
 			result = api.post(path, GluwaApiService.ParameterType.JSON, params, h1, h2);
-		} catch (Exception e) {
+		} catch(GluwaSDKNetworkException networkException) {
+			LOGGER.info("GluwaTransaction:", transaction);
+			LOGGER.error(networkException.getMessage(), networkException);
+			throw networkException;
+		}
+		catch(Exception e){
 			LOGGER.info("GluwaTransaction:", transaction);
 			LOGGER.error(e.getMessage(), e);
 			throw new GluwaSDKException(e);
 		}
+
 
 		return result;
 
@@ -209,7 +235,12 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		GluwaResponse result = new GluwaResponse();
 		try {
 			result = api.get(path, h1, h2);
-		} catch (Exception e) {
+		} catch(GluwaSDKNetworkException networkException) {
+			LOGGER.info("GluwaTransaction:", transaction);
+			LOGGER.error(networkException.getMessage(), networkException);
+			throw networkException;
+		}
+		catch (Exception e) {
 			LOGGER.info("GluwaTransaction:{}", transaction);
 			LOGGER.error(e.getMessage(), e);
 			throw new GluwaSDKException(e);
@@ -229,7 +260,12 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		GluwaResponse result = new GluwaResponse();
 		try {
 			result = api.get(path, h1, h2);
-		} catch (Exception e) {
+		} catch(GluwaSDKNetworkException networkException) {
+			LOGGER.info("GluwaTransaction:", transaction);
+			LOGGER.error(networkException.getMessage(), networkException);
+			throw networkException;
+		}
+		catch (Exception e) {
 			LOGGER.info("GluwaTransaction:{}", transaction);
 			LOGGER.error(e.getMessage(), e);
 			throw new GluwaSDKException(e);

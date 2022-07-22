@@ -1,11 +1,6 @@
 package com.gluwa.sdk;
 
-import com.gluwa.sdk.*;
-import org.junit.Test;
-
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import static org.junit.Assert.assertNotNull;
 
 public class TransactionTests {
 
@@ -33,28 +28,21 @@ public class TransactionTests {
      * @description = Positive test to get payment QR code in base64 format
      * @return = Base64 PNG format QR code
      */
-    public GluwaResponse getPaymentQRCodeTest_Pos() {
-        transaction.setCurrency(Currency.USDCG);
+    public GluwaResponse getPaymentQRCodeTest_Pos(Currency currency) {
+        transaction.setCurrency(currency);
         transaction.setAmount("51");
         transaction.setExpiry(1800);
         return wrapper.getPaymentQRCode(transaction);
     }
 
-    /***
-     * When PR for this method is merged to master, this test will be refactored correctly
-     */
     public GluwaResponse getPaymentQRCodeWithPayloadTest_Pos(Currency currency) {
         transaction.setCurrency(currency);
         transaction.setAmount("102");
         transaction.setExpiry(1800);
         transaction.setFee("1");
-        // getPaymentQRCode API returns QR code png image as a Base64 string and payload.
         return wrapper.getPaymentQRCodeWithPayload(transaction);
     }
 
-    /***
-     * When PR for this method is merged to master, this test will be refactored correctly
-     */
     public static GluwaResponse getListTransactionHistoryTest(String status, Currency currency) {
         transaction.setCurrency(currency);
         transaction.setLimit(2);
@@ -77,10 +65,8 @@ public class TransactionTests {
     }
 
     public GluwaResponse getFee_test(Currency currency) {
-        transaction.setCurrency(Currency.USDCG);
+        transaction.setCurrency(currency);
         transaction.setAmount("51");
-
-        GluwaResponse result = wrapper.getFee(transaction);
-        return result;
+        return wrapper.getFee(transaction);
     }
 }
