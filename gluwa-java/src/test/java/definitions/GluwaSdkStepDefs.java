@@ -83,10 +83,10 @@ public class GluwaSdkStepDefs {
         }
     }
 
-    @Then("I validate bad request response for unsupported currency {}")
-    public void iValidateBadRequestResponse(Currency unsupportedCurrency) {
+    @Then("I validate bad request response for unsupported currency")
+    public void iValidateBadRequestResponse() {
         assertThat(actualStatusCode).isEqualTo(400);
-        assertThat(actualBadResponseMessage).isEqualTo("Unsupported currency " + unsupportedCurrency +".");
+        assertThat(actualBadResponseMessage).isEqualTo("one of more Url parameters are invalid."/* + unsupportedCurrency +"."*/);
     }
 
     @When("I get list of transactions with {} for unsupported currency {}")
@@ -113,8 +113,8 @@ public class GluwaSdkStepDefs {
     }
 
     @When("I get fee for currency {}")
-    public void iGetFeeForCurrency(Currency currency) {
-        result = txTest.getFee_test(currency);
+    public void iGetFeeForCurrency(Object currency) {
+        result = txTest.getFeeTest_test(currency);
         System.out.println("=====================================");
         System.out.println("Status code: " + result.getCode());
         System.out.println("REASON: " + result.getReason());
@@ -128,5 +128,20 @@ public class GluwaSdkStepDefs {
         System.out.println("Status code: " + result.getCode());
         System.out.println("REASON: " + result.getReason());
         System.out.println("RESPONSE BODY: " + result.getBody());
+    }
+
+    @When("I get fee forr currency {}")
+    public void iGetFeeForCurrencyTest(Object currency) {
+        try {
+            result = txTest.getFeeTest_test(currency);
+            System.out.println("=====================================");
+            System.out.println("Status code: " + result.getCode());
+            System.out.println("REASON: " + result.getReason());
+            System.out.println("RESPONSE BODY: " + result.getBody());
+        } catch (GluwaSDKNetworkException e) {
+            actualStatusCode = e.getStatusCode();
+            //System.out.printf(e.extractBadRequestMessage());
+            actualBadResponseMessage = e.extractBadRequestMessage();
+        }
     }
 }

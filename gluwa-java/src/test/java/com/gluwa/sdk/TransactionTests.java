@@ -69,4 +69,11 @@ public class TransactionTests {
         transaction.setAmount("51");
         return wrapper.getFee(transaction);
     }
+
+    public GluwaResponse getFeeTest_test(Object currency) {
+        transaction.setCurrency(currency);
+        transaction.setAmount("51");
+        return wrapper.getFee(transaction);
+    }
+
 }

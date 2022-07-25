@@ -51,7 +51,7 @@
     @gluwaSdk7
     Scenario Outline: Get List of Transactions negative test
       When I get list of transactions with <Status> for unsupported currency <Currency>
-      Then I validate bad request response for unsupported currency <Currency>
+      Then I validate bad request response for unsupported currency
       Examples:
         | Currency |   Status   |
         |   GCRE   |  Confirmed |
@@ -100,3 +100,8 @@
         | sUSDCG   |
         | NGNG     |
         | sNGNG    |
+
+    @gluwaSdk13
+    Scenario: Get fee for currency Negative
+      When I get fee forr currency Ruble
+      Then I validate bad request response for unsupported currency
