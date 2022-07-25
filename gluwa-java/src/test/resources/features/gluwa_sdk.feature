@@ -15,10 +15,10 @@
     @gluwaSdk2
     Scenario Outline: Post transaction negative test
       When I post transaction via Gluwa SDK using unsupported currency for <Currency>
-      Then I validate bad request response for unsupported currency <Currency>
+      Then I validate request response <Code> and <Message>
       Examples:
-        | Currency |
-        |   GCRE   |
+        | Currency | Code | Message |
+        |   GCRE   | 400  | Unsupported currency GCRE.    |
 
 #   TO-DO: Uncomment NGNG and sNGNG currencies when fixed
     @gluwaSdk3
@@ -51,10 +51,10 @@
     @gluwaSdk7
     Scenario Outline: Get List of Transactions negative test
       When I get list of transactions with <Status> for unsupported currency <Currency>
-      Then I validate bad request response for unsupported currency
+      Then I validate request response <Code> and <Message>
       Examples:
-        | Currency |   Status   |
-        |   GCRE   |  Confirmed |
+        | Currency |   Status   | Code | Message |
+        |   GCRE   |  Confirmed | 400  | Unsupported currency GCRE.    |
 
 
     @gluwaSdk8
@@ -102,6 +102,9 @@
         | sNGNG    |
 
     @gluwaSdk13
-    Scenario: Get fee for currency Negative
-      When I get fee forr currency Ruble
-      Then I validate bad request response for unsupported currency
+    Scenario Outline: Get fee for currency Negative
+      When I get fee for currency <Currency>
+      Then I validate request response <Code> and <Message>
+      Examples:
+        | Currency | Code | Message |
+        | Ruble    | 400  | one of more Url parameters are invalid. |
