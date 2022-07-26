@@ -75,7 +75,7 @@ final class GluwaApiService {
 			return "Mainnet";
 	}
 
-	protected String[] getContractAddressData(Currency currency) {
+	protected String[] getContractAddressData(Object currency) {
 
 		try {
 			String netType = getNetType();
@@ -108,10 +108,14 @@ final class GluwaApiService {
 			}
 			br.close();
 
+			JSONObject responseJson = new JSONObject(responseStr.toString());
+
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("response:{}", responseStr);
 
-			JSONObject responseJson = new JSONObject(responseStr.toString());
+			if (responseCode < 200 || responseCode > 300) {
+				throw new GluwaSDKNetworkException(responseCode, responseStr.toString());
+			}
 
 			return new String[] {
 				responseJson.getString("Address"), // Address
@@ -119,8 +123,9 @@ final class GluwaApiService {
 				responseJson.getNumber("Decimals").toString() // Decimals
 			};
 		} catch (Exception e) {
-			System.out.println(e);
-			return new String[]{null, null, null};
+			LOGGER.warn("caught Exception: {}", e);
+			// return new String[]{null, null, null};
+			throw new GluwaSDKException(e);
 		}
 	}
 
@@ -159,9 +164,8 @@ final class GluwaApiService {
 				response.setBody(sb.toString());
 
 				if (httpResponse.getCode() < 200 || httpResponse.getCode() > 300) {
-					throw new GluwaSDKException(httpResponse.getReasonPhrase() + " " + response.getBody());
+					throw new GluwaSDKNetworkException(httpResponse.getCode(), response.getBody());
 				} else {
-
 					if (response.getBody() != null && response.getBody().length() > 0
 							&& response.getContentType().toLowerCase().contains("application/json")) {
 
@@ -235,9 +239,8 @@ final class GluwaApiService {
 				response.setBody(sb.toString());
 
 				if (httpResponse.getCode() < 200 || httpResponse.getCode() > 300) {
-					throw new GluwaSDKException(httpResponse.getReasonPhrase() + " " + response.getBody());
+					throw new GluwaSDKNetworkException(httpResponse.getCode(), response.getBody());
 				} else {
-
 					if (response.getBody() != null && response.getBody().length() > 0
 							&& response.getContentType().toLowerCase().contains("application/json")) {
 

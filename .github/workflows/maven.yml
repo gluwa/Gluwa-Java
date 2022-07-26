@@ -8,10 +8,12 @@ on:
     branches:
       - 'feature/**'
       - 'master'
+      - 'dev'
   pull_request:
     branches:
       - 'feature/**'
       - 'master'
+      - 'dev'
   workflow_dispatch:
 
 jobs:
