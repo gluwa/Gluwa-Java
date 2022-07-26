@@ -9,7 +9,7 @@ public class GluwaTransaction implements Serializable {
 	 *
 	 */
 	private static final long serialVersionUID = 5510883158387021589L;
-	Currency currency;
+	Object currency;
 	String amount;
 	String fee;
 	String merchantOrderID;
@@ -36,10 +36,10 @@ public class GluwaTransaction implements Serializable {
 	public void setExpiry(int expiry) {
 		this.expiry = expiry;
 	}
-	public Currency getCurrency() {
+	public Object getCurrency() {
 		return currency;
 	}
-	public void setCurrency(Currency currency) {
+	public void setCurrency(Object currency) {
 		this.currency = currency;
 	}
 	public String getAmount() {

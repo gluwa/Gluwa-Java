@@ -75,7 +75,7 @@ final class GluwaApiService {
 			return "Mainnet";
 	}
 
-	protected String[] getContractAddressData(Currency currency) {
+	protected String[] getContractAddressData(Object currency) {
 
 		try {
 			String netType = getNetType();

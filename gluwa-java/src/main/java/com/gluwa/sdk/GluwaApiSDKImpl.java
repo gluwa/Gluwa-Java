@@ -70,7 +70,12 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		GluwaResponse result = new GluwaResponse();
 		try {
 			result = api.post(GluwaApiService.V1_PATH_QRCODE, GluwaApiService.ParameterType.JSON, params, h1, h2);
-		} catch (Exception e) {
+		} catch(GluwaSDKNetworkException networkException) {
+			LOGGER.info("GluwaTransaction:", transaction);
+			LOGGER.error(networkException.getMessage(), networkException);
+			throw networkException;
+		}
+		catch (Exception e) {
 			LOGGER.info("GluwaTransaction:{}", transaction);
 			LOGGER.error(e.getMessage(), e);
 			throw new GluwaSDKException(e);
@@ -104,7 +109,12 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		GluwaResponse result = new GluwaResponse();
 		try {
 			result = api.post(GluwaApiService.V1_PATH_QRCODE_PAYLOAD, GluwaApiService.ParameterType.JSON, params, h1, h2);
-		} catch (Exception e) {
+		} catch(GluwaSDKNetworkException networkException) {
+			LOGGER.info("GluwaTransaction:", transaction);
+			LOGGER.error(networkException.getMessage(), networkException);
+			throw networkException;
+		}
+		catch (Exception e) {
 			LOGGER.info("GluwaTransaction:{}", transaction);
 			LOGGER.error(e.getMessage(), e);
 			throw new GluwaSDKException(e);
@@ -117,13 +127,18 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 
 		Header h1 = new BasicHeader("Accept", "application/json");
 		Header h2 = new BasicHeader("Content-Type", "application/json;charset=UTF-8");
-		String path = generatePath(GluwaApiService.V1_PATH_ADDRESS, transaction.getCurrency().name())
+		String path = generatePath(GluwaApiService.V1_PATH_ADDRESS, transaction.getCurrency().toString()/*.name()*/)
 				+ configuration.getMasterEthereumAddress();
 
 		GluwaResponse result = new GluwaResponse();
 		try {
 			result = api.get(path, h1, h2);
-		} catch (Exception e) {
+		} catch(GluwaSDKNetworkException networkException) {
+			LOGGER.info("GluwaTransaction:", transaction);
+			LOGGER.error(networkException.getMessage(), networkException);
+			throw networkException;
+		}
+		catch (Exception e) {
 			LOGGER.info("GluwaTransaction:{}", transaction);
 			LOGGER.error(e.getMessage(), e);
 			throw new GluwaSDKException(e);
@@ -137,12 +152,17 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 
 		Header h1 = new BasicHeader("Accept", "application/json");
 		Header h2 = new BasicHeader("Content-Type", "application/json;charset=UTF-8");
-		String path = generatePath(GluwaApiService.V1_PATH_FEE, transaction.getCurrency().name(), transaction.getAmount());
+		String path = generatePath(GluwaApiService.V1_PATH_FEE, transaction.getCurrency().toString(), transaction.getAmount());
 
 		GluwaResponse result = new GluwaResponse();
 		try {
 			result = api.get(path, h1, h2);
-		} catch (Exception e) {
+		} catch(GluwaSDKNetworkException networkException) {
+			LOGGER.info("GluwaTransaction:", transaction);
+			LOGGER.error(networkException.getMessage(), networkException);
+			throw networkException;
+		}
+		catch (Exception e) {
 			LOGGER.info("GluwaTransaction:{}", transaction);
 			LOGGER.error(e.getMessage(), e);
 			throw new GluwaSDKException(e);
@@ -185,11 +205,17 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 
 		try {
 			result = api.post(path, GluwaApiService.ParameterType.JSON, params, h1, h2);
-		} catch (Exception e) {
+		} catch(GluwaSDKNetworkException networkException) {
+			LOGGER.info("GluwaTransaction:", transaction);
+			LOGGER.error(networkException.getMessage(), networkException);
+			throw networkException;
+		}
+		catch(Exception e){
 			LOGGER.info("GluwaTransaction:", transaction);
 			LOGGER.error(e.getMessage(), e);
 			throw new GluwaSDKException(e);
 		}
+
 
 		return result;
 
@@ -201,7 +227,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		Header h1 = new BasicHeader("Accept", "application/json");
 		Header h2 = new BasicHeader("X-REQUEST-SIGNATURE", timestampSignature());
 
-		String path = generatePath(GluwaApiService.V1_PATH_TRANSACTION_HISTORY, transaction.getCurrency().name());
+		String path = generatePath(GluwaApiService.V1_PATH_TRANSACTION_HISTORY, transaction.getCurrency().toString());
 		path = path.replaceAll("\\{MasterEthereumAddress\\}", configuration.getMasterEthereumAddress());
 		path += "?Limit=" + transaction.getLimit() + "&Status=" + transaction.getStatus() + "&Offset="
 				+ transaction.getOffset();
@@ -209,7 +235,12 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		GluwaResponse result = new GluwaResponse();
 		try {
 			result = api.get(path, h1, h2);
-		} catch (Exception e) {
+		} catch(GluwaSDKNetworkException networkException) {
+			LOGGER.info("GluwaTransaction:", transaction);
+			LOGGER.error(networkException.getMessage(), networkException);
+			throw networkException;
+		}
+		catch (Exception e) {
 			LOGGER.info("GluwaTransaction:{}", transaction);
 			LOGGER.error(e.getMessage(), e);
 			throw new GluwaSDKException(e);
@@ -223,13 +254,18 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 
 		Header h1 = new BasicHeader("Accept", "application/json");
 		Header h2 = new BasicHeader("X-REQUEST-SIGNATURE", timestampSignature());
-		String path = generatePath(GluwaApiService.V1_PATH_TRANSACTION_DETAIL, transaction.getCurrency().name())
+		String path = generatePath(GluwaApiService.V1_PATH_TRANSACTION_DETAIL, transaction.getCurrency().toString())
 				+ transaction.getTxnHash();
 
 		GluwaResponse result = new GluwaResponse();
 		try {
 			result = api.get(path, h1, h2);
-		} catch (Exception e) {
+		} catch(GluwaSDKNetworkException networkException) {
+			LOGGER.info("GluwaTransaction:", transaction);
+			LOGGER.error(networkException.getMessage(), networkException);
+			throw networkException;
+		}
+		catch (Exception e) {
 			LOGGER.info("GluwaTransaction:{}", transaction);
 			LOGGER.error(e.getMessage(), e);
 			throw new GluwaSDKException(e);
@@ -313,7 +349,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 
 	protected String hashTransaction(GluwaTransaction transaction) {
 
-		String[] contractAddressData = this.api.getContractAddressData(transaction.getCurrency());
+		String[] contractAddressData = this.api.getContractAddressData(transaction.getCurrency().toString());
 
 		StringBuffer sb = new StringBuffer();
 
