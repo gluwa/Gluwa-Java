@@ -3,6 +3,8 @@
 
 name: Java CI with Maven
 
+concurrency: gluwa-java
+
 on:
   push:
     branches:
