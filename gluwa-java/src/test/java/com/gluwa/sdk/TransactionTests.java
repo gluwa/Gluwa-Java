@@ -43,16 +43,20 @@ public class TransactionTests {
         return wrapper.getPaymentQRCodeWithPayload(transaction);
     }
 
-    public static GluwaResponse getListTransactionHistoryTest(String status, Object currency) {
+    public static GluwaResponse getListTransactionHistoryTest(int limit,
+                                                              int offset,
+                                                              String status,
+                                                              Object currency)
+    {
         transaction.setCurrency(currency);
-        transaction.setLimit(2);
+        transaction.setLimit(limit);
         transaction.setStatus(status);
-        transaction.setOffset(0);
+        transaction.setOffset(offset);
         return wrapper.getListTransactionHistory(transaction);
     }
 
     public GluwaResponse getListTransactionDetail_test(Object currency) {
-        GluwaResponse transactionList = getListTransactionHistoryTest("Confirmed", currency);
+        GluwaResponse transactionList = getListTransactionHistoryTest(0,0,"Confirmed", currency);
         String txnHash = transactionList.getMapList().get(0).get("TxnHash").toString();
         transaction.setCurrency(currency);
         transaction.setTxnHash(txnHash);

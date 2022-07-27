@@ -61,15 +61,15 @@
         | NGNG     | Incomplete |
         | sNGNG    | Incomplete |
 
-    @gluwaSdk7
-    Scenario Outline: Get List of Transactions negative test
-      When I get list of transactions with <Status> for unsupported currency <Currency>
-      Then I validate request response <Code> and <Message>
-      When I get list of transactions with <Status> for invalid currency <invalidCurrency>
-      Then I validate request response <Code> and <InvalidCurrencyMessage>
-      Examples:
-        | Currency |   Status   | Code |            Message            |  invalidCurrency |              InvalidCurrencyMessage       |
-        |   GCRE   |  Confirmed | 400  | Unsupported currency GCRE.    |   DOGE           |   one of more Url parameters are invalid. |
+#    @gluwaSdk7
+#    Scenario Outline: Get List of Transactions negative test
+#      When I get list of transactions with <Status> for unsupported currency <Currency>
+#      Then I validate request response <Code> and <Message>
+#      When I get list of transactions with <Status> for invalid currency <invalidCurrency>
+#      Then I validate request response <Code> and <InvalidCurrencyMessage>
+#      Examples:
+#        | Currency |   Status   | Code |            Message            |  invalidCurrency |              InvalidCurrencyMessage       |
+#        |   GCRE   |  Confirmed | 400  | Unsupported currency GCRE.    |   DOGE           |   one of more Url parameters are invalid. |
 
 
     @gluwaSdk8

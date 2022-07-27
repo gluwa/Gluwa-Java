@@ -5,20 +5,40 @@ import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import support.TestContext;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
-//import static org.junit.Assert.*;
+
 
 public class GluwaSdkStepDefs {
-
-    TransactionTests txTest = new TransactionTests();
-    GluwaResponse result;
     private int actualStatusCode;
     private String actualBadResponseMessage;
+    private JSONObject responseContents;
+
+
+    TransactionTests txTest = new TransactionTests();
+
+    GluwaResponse result;
+
+    TestContext response = new TestContext();
+
+
+    private String getResponseMessage(JSONObject responseContents, GluwaSDKNetworkException ex) {
+        try {
+            JSONArray innerErrors = responseContents.getJSONArray("InnerErrors");
+            actualBadResponseMessage = innerErrors.getJSONObject(0).getString("Message");
+        } catch (Exception e) {
+            System.out.println("No Inner Errors");
+            actualBadResponseMessage = ex.extractBadRequestMessage();
+        }
+        return actualBadResponseMessage;
+    }
+
 
     @When("I post transaction via Gluwa SDK for {}")
     public void iPostTransactionViaGluwaSDKForCurrency(Currency currency) {
@@ -43,7 +63,7 @@ public class GluwaSdkStepDefs {
         }
     }
 
-
+    // TODO depricate this method
     @Then("I validate get response")
     public void iValidateResponse() {
         assertThat(result.getCode()).isEqualTo(200);
@@ -53,7 +73,7 @@ public class GluwaSdkStepDefs {
 
     @When("I get list of transactions with {} status for {}")
     public void iGetListOfTransactionsFor(String status, Currency currency) {
-        result = TransactionTests.getListTransactionHistoryTest(status, currency);
+        result = TransactionTests.getListTransactionHistoryTest(0,0,status, currency);
     }
 
 
@@ -76,18 +96,19 @@ public class GluwaSdkStepDefs {
 
     @Then("I validate request response {} and {}")
     public void iValidateBadRequestResponse(int code, String message) {
-        assertThat(actualStatusCode).isEqualTo(code);
-        assertThat(actualBadResponseMessage).isEqualTo(message);
+        assertThat(response.getResponseCode()).isEqualTo(code);
+        System.out.println(actualBadResponseMessage);
+        assertThat(response.getResponseMessage()).isEqualTo(message);
     }
 
 
     @When("I get list of transactions with {} for unsupported currency {}")
-    public void iGetListOfTransactionsForInvalidCurrency(String status, Currency unsupportedCurrency) {
+    public void iGetListOfTransactionsForInvalidCurrency(String status, Object currency) {
         try {
-            result = TransactionTests.getListTransactionHistoryTest(status, unsupportedCurrency);
+            result = TransactionTests.getListTransactionHistoryTest(0,0,status, currency);
         } catch (GluwaSDKNetworkException e) {
             actualStatusCode = e.getStatusCode();
-            actualBadResponseMessage = e.extractBadRequestMessage();
+            actualBadResponseMessage = e.extractBadRequestMessage().trim();
         }
     }
 
@@ -135,13 +156,20 @@ public class GluwaSdkStepDefs {
         }
     }
 
-    @When("I get list of transactions with {} for invalid currency {}")
-    public void iGetListOfTransactionsWithStatusForInvalidCurrencyInvalidCurrency(String status, Object invalidCurrency) {
+    @When("I get list of transactions using request parameters {} {} {} {}")
+    public void iGetListOfTransactionsNegative(int limit,
+                                               int offset,
+                                               String status,
+                                               Object invalidCurrency)
+    {
         try {
-            result = TransactionTests.getListTransactionHistoryTest(status, invalidCurrency);
+            result = TransactionTests.getListTransactionHistoryTest(limit,
+                                                                    offset,
+                                                                    status,
+                                                                    invalidCurrency);
         } catch (GluwaSDKNetworkException e) {
-            actualStatusCode = e.getStatusCode();
-            actualBadResponseMessage = e.extractBadRequestMessage();
+            response.setResponseMessageAndCode(getResponseMessage(e.getResponseContents(),e),
+                                                e.getStatusCode());
         }
     }
 
