@@ -98,7 +98,6 @@
         | NGNG     |
         | sNGNG    |
         | GCRE     |
-|
 
     @gluwaSdk14
     Scenario Outline: Get fee for currency Positive

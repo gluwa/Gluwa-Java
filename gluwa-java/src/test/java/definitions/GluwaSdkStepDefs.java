@@ -28,17 +28,6 @@ public class GluwaSdkStepDefs {
     TestContext response = new TestContext();
 
 
-    private String getResponseMessage(JSONObject responseContents, GluwaSDKNetworkException ex) {
-        try {
-            JSONArray innerErrors = responseContents.getJSONArray("InnerErrors");
-            actualBadResponseMessage = innerErrors.getJSONObject(0).getString("Message");
-        } catch (Exception e) {
-            System.out.println("No Inner Errors");
-            actualBadResponseMessage = ex.extractBadRequestMessage();
-        }
-        return actualBadResponseMessage;
-    }
-
 
     @When("I post transaction via Gluwa SDK for {}")
     public void iPostTransactionViaGluwaSDKForCurrency(Currency currency) {
@@ -92,7 +81,7 @@ public class GluwaSdkStepDefs {
     public void iValidateBadRequestResponse(int code, String message) {
         System.out.println(response.getResponseMessage());
         assertThat(response.getResponseCode()).isEqualTo(code);
-        assertThat(response.getResponseMessage()).isEqualTo(message);
+        assertThat(response.getResponseMessage()).contains(message);
     }
 
 
@@ -124,7 +113,7 @@ public class GluwaSdkStepDefs {
         try {
             result = txTest.getFeeTest_test(currency, amount);
         } catch (GluwaSDKNetworkException e) {
-            response.setResponseMessageAndCode(getResponseMessage(e.getResponseContents(),e),
+            response.setResponseMessageAndCode(response.extractValidationMessageFromPath(e),
                                                e.getStatusCode());
         }
     }
@@ -162,7 +151,7 @@ public class GluwaSdkStepDefs {
                                                                     status,
                                                                     invalidCurrency);
         } catch (GluwaSDKNetworkException e) {
-            response.setResponseMessageAndCode(getResponseMessage(e.getResponseContents(),e),
+            response.setResponseMessageAndCode(response.extractValidationMessageFromPath(e),
                                                 e.getStatusCode());
         }
     }
@@ -172,7 +161,7 @@ public class GluwaSdkStepDefs {
         try {
             result = txTest.getListTransactionDetail_test(txnHash, currency);
         } catch (GluwaSDKNetworkException e) {
-            response.setResponseMessageAndCode(getResponseMessage(e.getResponseContents(),e),
+            response.setResponseMessageAndCode(response.extractValidationMessageFromPath(e),
                                                e.getStatusCode());
         }
 
@@ -184,7 +173,7 @@ public class GluwaSdkStepDefs {
         try {
             result = txTest.getPaymentQRCodeWithPayloadTest_Pos(Currency);
         } catch (GluwaSDKNetworkException e) {
-            response.setResponseMessageAndCode(getResponseMessage(e.getResponseContents(),e),
+            response.setResponseMessageAndCode(response.extractValidationMessageFromPath(e),
                                                                   e.getStatusCode());
         }
     }
@@ -194,7 +183,7 @@ public class GluwaSdkStepDefs {
         try {
             result = txTest.getAddressTest(invalidCurrency);
         } catch (GluwaSDKNetworkException e) {
-            response.setResponseMessageAndCode(getResponseMessage(e.getResponseContents(),e),
+            response.setResponseMessageAndCode(response.extractValidationMessageFromPath(e),
                                                                   e.getStatusCode());
         }
     }

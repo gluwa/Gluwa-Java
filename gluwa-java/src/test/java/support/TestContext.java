@@ -1,7 +1,10 @@
 package support;
 
 
+import com.gluwa.sdk.GluwaSDKNetworkException;
 import definitions.GluwaSdkStepDefs;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /***
  * All shared methods to be added in this class
@@ -29,5 +32,21 @@ public class TestContext {
     public void setResponseMessageAndCode(String newMessage, int newCode){
         this.responseMessage = newMessage.trim();
         this.responseCode = newCode;
+    }
+
+
+    public String extractValidationMessageFromPath(GluwaSDKNetworkException ex) {
+        JSONObject badRequestJson = ex.getResponseContents();
+        String errorMessage = "";
+        try {
+            JSONArray innerErrors = badRequestJson.getJSONArray("InnerErrors");
+            for (int i = 0; i < innerErrors.length(); i++) {
+                errorMessage += innerErrors.getJSONObject(i).getString("Message");
+            }
+        } catch (Exception e) {
+            System.out.println("No Inner Errors");
+            errorMessage = badRequestJson.getString("Message");
+        }
+        return errorMessage;
     }
 }
