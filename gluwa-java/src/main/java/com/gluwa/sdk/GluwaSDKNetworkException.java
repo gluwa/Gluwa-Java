@@ -1,5 +1,6 @@
 package com.gluwa.sdk;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class GluwaSDKNetworkException extends GluwaSDKException {
@@ -37,5 +38,18 @@ public class GluwaSDKNetworkException extends GluwaSDKException {
 	public JSONObject getResponseContents() {
 		JSONObject content = new JSONObject(this.getBody());
 		return content;
+	}
+
+	public String extractValidationMessageFromPath(String path) {
+		JSONObject badRequestJson = new JSONObject(this.getBody());
+		JSONArray innerErrors = badRequestJson.getJSONArray("InnerErrors");
+		for (int i = 0; i < innerErrors.length(); i++) {
+			JSONObject currentInnerError = innerErrors.getJSONObject(i);
+			String currentPath = currentInnerError.getString("Path");
+			if (currentPath.equals(path)) {
+				return currentInnerError.getString("Message");
+			}
+		}
+		return null;
 	}
 }
