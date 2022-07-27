@@ -161,15 +161,13 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 			LOGGER.info("GluwaTransaction:", transaction);
 			LOGGER.error(networkException.getMessage(), networkException);
 			throw networkException;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			LOGGER.info("GluwaTransaction:{}", transaction);
 			LOGGER.error(e.getMessage(), e);
 			throw new GluwaSDKException(e);
 		}
 
 		return result;
-
 	}
 
 	@Override

@@ -77,12 +77,6 @@ public class GluwaSdkStepDefs {
     }
 
 
-    @When("I get a transaction by hash for {}")
-    public void iGetATransactionBy(Currency currency) {
-        result = txTest.getListTransactionDetail_test(currency);
-    }
-
-
     @When("I post transaction via Gluwa SDK using unsupported currency for {}")
     public void iPostTransactionViaGluwaSDKUsingInvalidCurrencyAs(Currency unsupportedCurrency) {
         try {
@@ -96,8 +90,8 @@ public class GluwaSdkStepDefs {
 
     @Then("I validate request response {} and {}")
     public void iValidateBadRequestResponse(int code, String message) {
+        System.out.println(response.getResponseMessage());
         assertThat(response.getResponseCode()).isEqualTo(code);
-        System.out.println(actualBadResponseMessage);
         assertThat(response.getResponseMessage()).isEqualTo(message);
     }
 
@@ -125,13 +119,13 @@ public class GluwaSdkStepDefs {
     }
 
 
-    @When("I get fee for currency {}")
-    public void iGetFeeForCurrencyTest(Object currency) {
+    @When("I get fee for transaction of {} for currency {}")
+    public void iGetFeeForCurrencyTest(String amount, Object currency) {
         try {
-            result = txTest.getFeeTest_test(currency);
+            result = txTest.getFeeTest_test(currency, amount);
         } catch (GluwaSDKNetworkException e) {
-            actualStatusCode = e.getStatusCode();
-            actualBadResponseMessage = e.extractBadRequestMessage();
+            response.setResponseMessageAndCode(getResponseMessage(e.getResponseContents(),e),
+                                               e.getStatusCode());
         }
     }
 
@@ -173,34 +167,25 @@ public class GluwaSdkStepDefs {
         }
     }
 
-    @When("I get transaction by hash for unsupported {}")
-    public void iGetTransactionByHashForUnsupportedCurrency(Currency unsupportedCurrency) {
+    @When("I get transaction by {} for {}")
+    public void iGetTransactionByHashForUnsupportedCurrency(String txnHash, Object currency) {
         try {
-            result = txTest.getListTransactionDetail_test(unsupportedCurrency);
+            result = txTest.getListTransactionDetail_test(txnHash, currency);
         } catch (GluwaSDKNetworkException e) {
-            actualStatusCode = e.getStatusCode();
-            actualBadResponseMessage = e.extractBadRequestMessage();
+            response.setResponseMessageAndCode(getResponseMessage(e.getResponseContents(),e),
+                                               e.getStatusCode());
         }
 
     }
 
-    @When("I get transaction by hash for invalid {}")
-    public void iGetTransactionByHashForInvalidInvalidCurrency(Object invalidCurrency) {
-        try {
-            result = txTest.getListTransactionDetail_test(invalidCurrency);
-        } catch (GluwaSDKNetworkException e) {
-            actualStatusCode = e.getStatusCode();
-            actualBadResponseMessage = e.extractBadRequestMessage();
-        }
-    }
 
     @When("I get payment QR code Payload via Gluwa SDK for invalid {}")
-    public void iGetPaymentQRCodePayloadViaGluwaSDKForUnsupportedCurrency(Object invalidCurrency) {
+    public void iGetPaymentQRCodePayloadViaGluwaSDKForUnsupportedCurrency(Object Currency) {
         try {
-            result = txTest.getPaymentQRCodeWithPayloadTest_Pos(invalidCurrency);
+            result = txTest.getPaymentQRCodeWithPayloadTest_Pos(Currency);
         } catch (GluwaSDKNetworkException e) {
-            actualStatusCode = e.getStatusCode();
-            actualBadResponseMessage = e.extractBadRequestMessage();
+            response.setResponseMessageAndCode(getResponseMessage(e.getResponseContents(),e),
+                                                                  e.getStatusCode());
         }
     }
 
@@ -209,9 +194,8 @@ public class GluwaSdkStepDefs {
         try {
             result = txTest.getAddressTest(invalidCurrency);
         } catch (GluwaSDKNetworkException e) {
-            actualStatusCode = e.getStatusCode();
-            System.out.println(e.extractBadRequestMessage());
-            actualBadResponseMessage = e.extractBadRequestMessage();
+            response.setResponseMessageAndCode(getResponseMessage(e.getResponseContents(),e),
+                                                                  e.getStatusCode());
         }
     }
 }

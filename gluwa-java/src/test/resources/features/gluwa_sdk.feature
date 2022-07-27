@@ -61,40 +61,21 @@
         | NGNG     | Incomplete |
         | sNGNG    | Incomplete |
 
-#    @gluwaSdk7
-#    Scenario Outline: Get List of Transactions negative test
-#      When I get list of transactions with <Status> for unsupported currency <Currency>
-#      Then I validate request response <Code> and <Message>
-#      When I get list of transactions with <Status> for invalid currency <invalidCurrency>
-#      Then I validate request response <Code> and <InvalidCurrencyMessage>
-#      Examples:
-#        | Currency |   Status   | Code |            Message            |  invalidCurrency |              InvalidCurrencyMessage       |
-#        |   GCRE   |  Confirmed | 400  | Unsupported currency GCRE.    |   DOGE           |   one of more Url parameters are invalid. |
-
 
     @gluwaSdk8
-    Scenario Outline: Get transaction details by hash happy path
-      When I get a transaction by hash for <Currency>
+    Scenario Outline: Get transaction details by hash Positive
+      When I get transaction by <TxnHash> for <Currency>
       Then I validate get response
       Examples:
-        | Currency |
-        | USDCG    |
-        | sUSDCG   |
-        | NGNG     |
-        | sNGNG    |
+        | Currency |                                TxnHash                             |
+        | USDCG    | 0xb0015ecb8f2d4b2a77dbad40dbd024739f1346e5b4e5026631db88ed0f1ad5b4 |
+        | sUSDCG   | 0xeab93826d01a8b9958db234e2ee8820b6d5aa7c00e38d75e951b894676f9f345 |
+        | NGNG     | 0xbde2dbee48e18e18f5d10560e549c4d58b77f4cf84c46717f27ece026afb6e4f |
+        | sNGNG    | 0xc1d74c3c3a7791a96bd0cae42e2e5ddb993562131e83b248ed6d10b93a8ea366 |
 
-    @gluwaSdk9
-    Scenario Outline: Get transaction details by hash negative tests
-      When I get transaction by hash for unsupported <Currency>
-      Then I validate request response <Code> and <Message>
-      When I get transaction by hash for invalid <invalidCurrency>
-      Then I validate request response <Code> and <InvalidCurrencyMessage>
-      Examples:
-        | Currency |  Code |            Message            |  invalidCurrency |              InvalidCurrencyMessage       |
-        |   GCRE   |  400  | Unsupported currency GCRE.    |   DOGE           |   one of more Url parameters are invalid. |
 
       @gluwaSdk10
-      Scenario Outline: Get payment QR code with Payload happy path
+      Scenario Outline: Get payment QR code with Payload Positive
         When I get payment QR code with Payload via Gluwa SDK for <Currency>
         Then I validate get response
         Examples:
@@ -105,16 +86,9 @@
           | sNGNG    |
           | GCRE     |
 
-    @gluwaSdk11
-    Scenario Outline: Get payment QR code with Payload negative tests
-      When I get payment QR code Payload via Gluwa SDK for invalid <invalidCurrency>
-      Then I validate request response <Code> and <InvalidCurrencyMessage>
-      Examples:
-        |  Code  |  invalidCurrency |              InvalidCurrencyMessage       |
-        |  400   |   DOGE           |   One or more fields are invalid in body. |
 
     @gluwaSdk12
-    Scenario Outline: Get Address for currencies happy path
+    Scenario Outline: Get Address for currencies Positive
       When I get address via Gluwa SDK for <Currency>
       Then I validate get response
       Examples:
@@ -124,31 +98,18 @@
         | NGNG     |
         | sNGNG    |
         | GCRE     |
-
-    @gluwaSdk13
-    Scenario Outline: Get Address for currencies negative tests
-      When I get address via Gluwa SDK with invalid <invalidCurrency>
-      Then I validate request response <Code> and <InvalidCurrencyMessage>
-      Examples:
-        |  Code  |  invalidCurrency |              InvalidCurrencyMessage       |
-        |  400   |   DOGE           |   one of more Url parameters are invalid. |
+|
 
     @gluwaSdk14
     Scenario Outline: Get fee for currency Positive
-      When I get fee for currency <Currency>
+      When I get fee for transaction of <Amount> for currency <Currency>
       Then I validate get response
       Examples:
-        | Currency |
-        | USDCG    |
-        | sUSDCG   |
-        | NGNG     |
-        | sNGNG    |
-        | GCRE     |
+        | Currency | Amount |
+        | USDCG    | 50     |
+        | sUSDCG   | 50     |
+        | NGNG     | 50     |
+        | sNGNG    | 50     |
+        | GCRE     | 50     |
 
-    @gluwaSdk15
-    Scenario Outline: Get fee for currency Negative
-      When I get fee for currency <Currency>
-      Then I validate request response <Code> and <Message>
-      Examples:
-        | Currency | Code | Message |
-        | DOGE     | 400  | one of more Url parameters are invalid. |
+

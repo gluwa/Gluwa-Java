@@ -55,9 +55,9 @@ public class TransactionTests {
         return wrapper.getListTransactionHistory(transaction);
     }
 
-    public GluwaResponse getListTransactionDetail_test(Object currency) {
-        GluwaResponse transactionList = getListTransactionHistoryTest(0,0,"Confirmed", currency);
-        String txnHash = transactionList.getMapList().get(0).get("TxnHash").toString();
+    public GluwaResponse getListTransactionDetail_test(String txnHash, Object currency) {
+        //GluwaResponse transactionList = getListTransactionHistoryTest(0,0,"Confirmed", currency);
+        //String txnHash = transactionList.getMapList().get(0).get("TxnHash").toString();
         transaction.setCurrency(currency);
         transaction.setTxnHash(txnHash);
         return wrapper.getListTransactionDetail(transaction);
@@ -68,9 +68,9 @@ public class TransactionTests {
         return wrapper.getAddresses(transaction);
     }
 
-    public GluwaResponse getFeeTest_test(Object currency) {
+    public GluwaResponse getFeeTest_test(Object currency, String amount) {
         transaction.setCurrency(currency);
-        transaction.setAmount("51");
+        transaction.setAmount(amount);
         return wrapper.getFee(transaction);
     }
 }
