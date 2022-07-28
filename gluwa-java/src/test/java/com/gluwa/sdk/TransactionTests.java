@@ -12,14 +12,15 @@ public class TransactionTests {
      * @description = Positive test to post transaction with USDCG token
      * @return = Base64 PNG format QR code
      */
-    public GluwaResponse postTransactionTest(Object currency) {
+    public GluwaResponse postTransactionTest(Object currency, String amount, String targetAddress, String fee) {
         GluwaApiSDKImpl gluwaApiSDK = new GluwaApiSDKImpl(new ConfigurationForTest());
 
         transaction.setCurrency(currency); // Currency.KRWG, Currency.NGNG
-        transaction.setAmount("1");
-        transaction.setTargetAddress("0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9");
+        transaction.setAmount(amount);
+        transaction.setTargetAddress(targetAddress);
         transaction.setNote("This is the Test");
         transaction.setMerchantOrderID("My Order Id:20200101");
+        transaction.setFee(fee);
         transaction.setIdem(UUID.randomUUID());
         return gluwaApiSDK.postTransaction(transaction);
     }
@@ -28,18 +29,19 @@ public class TransactionTests {
      * @description = Positive test to get payment QR code in base64 format
      * @return = Base64 PNG format QR code
      */
-    public GluwaResponse getPaymentQRCodeTest_Pos(Object currency) {
+    public GluwaResponse getPaymentQRCodeTest_Pos(Object currency, String amount, int expiry, String fee) {
         transaction.setCurrency(currency);
-        transaction.setAmount("51");
-        transaction.setExpiry(1800);
+        transaction.setAmount(amount);
+        transaction.setExpiry(expiry);
+        transaction.setFee(fee);
         return wrapper.getPaymentQRCode(transaction);
     }
 
-    public GluwaResponse getPaymentQRCodeWithPayloadTest_Pos(Object currency) {
+    public GluwaResponse getPaymentQRCodeWithPayloadTest_Pos(Object currency, String amount, int expiry, String fee) {
         transaction.setCurrency(currency);
-        transaction.setAmount("102");
-        transaction.setExpiry(1800);
-        transaction.setFee("1");
+        transaction.setAmount(amount);
+        transaction.setExpiry(expiry);
+        transaction.setFee(fee);
         return wrapper.getPaymentQRCodeWithPayload(transaction);
     }
 

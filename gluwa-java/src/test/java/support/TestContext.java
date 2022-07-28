@@ -37,16 +37,16 @@ public class TestContext {
 
     public String extractValidationMessageFromPath(GluwaSDKNetworkException ex) {
         JSONObject badRequestJson = ex.getResponseContents();
-        String errorMessage = "";
+        StringBuilder errorMessage = new StringBuilder();
         try {
             JSONArray innerErrors = badRequestJson.getJSONArray("InnerErrors");
             for (int i = 0; i < innerErrors.length(); i++) {
-                errorMessage += innerErrors.getJSONObject(i).getString("Message");
+                errorMessage.append(innerErrors.getJSONObject(i).getString("Message"));
             }
         } catch (Exception e) {
             System.out.println("No Inner Errors");
-            errorMessage = badRequestJson.getString("Message");
+            errorMessage = new StringBuilder(badRequestJson.getString("Message"));
         }
-        return errorMessage;
+        return errorMessage.toString();
     }
 }
