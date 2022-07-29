@@ -1,11 +1,6 @@
 package com.gluwa.sdk;
 
-import com.gluwa.sdk.*;
-import org.junit.Test;
-
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import static org.junit.Assert.assertNotNull;
 
 public class TransactionTests {
 
@@ -17,14 +12,15 @@ public class TransactionTests {
      * @description = Positive test to post transaction with USDCG token
      * @return = Base64 PNG format QR code
      */
-    public GluwaResponse postTransactionTest(Currency currency) {
+    public GluwaResponse postTransactionTest(Object currency, String amount, String targetAddress, String fee) {
         GluwaApiSDKImpl gluwaApiSDK = new GluwaApiSDKImpl(new ConfigurationForTest());
 
         transaction.setCurrency(currency); // Currency.KRWG, Currency.NGNG
-        transaction.setAmount("1");
-        transaction.setTargetAddress("0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9");
+        transaction.setAmount(amount);
+        transaction.setTargetAddress(targetAddress);
         transaction.setNote("This is the Test");
         transaction.setMerchantOrderID("My Order Id:20200101");
+        transaction.setFee(fee);
         transaction.setIdem(UUID.randomUUID());
         return gluwaApiSDK.postTransaction(transaction);
     }
@@ -33,54 +29,50 @@ public class TransactionTests {
      * @description = Positive test to get payment QR code in base64 format
      * @return = Base64 PNG format QR code
      */
-    public GluwaResponse getPaymentQRCodeTest_Pos() {
-        transaction.setCurrency(Currency.USDCG);
-        transaction.setAmount("51");
-        transaction.setExpiry(1800);
+    public GluwaResponse getPaymentQRCodeTest_Pos(Object currency, String amount, int expiry, String fee) {
+        transaction.setCurrency(currency);
+        transaction.setAmount(amount);
+        transaction.setExpiry(expiry);
+        transaction.setFee(fee);
         return wrapper.getPaymentQRCode(transaction);
     }
 
-    /***
-     * When PR for this method is merged to master, this test will be refactored correctly
-     */
-    public GluwaResponse getPaymentQRCodeWithPayloadTest_Pos(Currency currency) {
+    public GluwaResponse getPaymentQRCodeWithPayloadTest_Pos(Object currency, String amount, int expiry, String fee) {
         transaction.setCurrency(currency);
-        transaction.setAmount("102");
-        transaction.setExpiry(1800);
-        transaction.setFee("1");
-        // getPaymentQRCode API returns QR code png image as a Base64 string and payload.
+        transaction.setAmount(amount);
+        transaction.setExpiry(expiry);
+        transaction.setFee(fee);
         return wrapper.getPaymentQRCodeWithPayload(transaction);
     }
 
-    /***
-     * When PR for this method is merged to master, this test will be refactored correctly
-     */
-    public static GluwaResponse getListTransactionHistoryTest(Currency currency) {
+    public static GluwaResponse getListTransactionHistoryTest(int limit,
+                                                              int offset,
+                                                              String status,
+                                                              Object currency)
+    {
         transaction.setCurrency(currency);
-        transaction.setLimit(2);
-        transaction.setStatus("Confirmed");
-        transaction.setOffset(0);
+        transaction.setLimit(limit);
+        transaction.setStatus(status);
+        transaction.setOffset(offset);
         return wrapper.getListTransactionHistory(transaction);
     }
 
-    public GluwaResponse getListTransactionDetail_test(Currency currency) {
-        GluwaResponse transactionList = getListTransactionHistoryTest(currency);
-        String txnHash = transactionList.getMapList().get(0).get("TxnHash").toString();
+    public GluwaResponse getListTransactionDetail_test(String txnHash, Object currency) {
+        //GluwaResponse transactionList = getListTransactionHistoryTest(0,0,"Confirmed", currency);
+        //String txnHash = transactionList.getMapList().get(0).get("TxnHash").toString();
         transaction.setCurrency(currency);
         transaction.setTxnHash(txnHash);
         return wrapper.getListTransactionDetail(transaction);
     }
 
-    public GluwaResponse getAddressTest(Currency currency) {
+    public GluwaResponse getAddressTest(Object currency) {
         transaction.setCurrency(currency);
         return wrapper.getAddresses(transaction);
     }
 
-    public GluwaResponse getFee_test(Currency currency) {
-        transaction.setCurrency(Currency.USDCG);
-        transaction.setAmount("51");
-
-        GluwaResponse result = wrapper.getFee(transaction);
-        return result;
+    public GluwaResponse getFeeTest_test(Object currency, String amount) {
+        transaction.setCurrency(currency);
+        transaction.setAmount(amount);
+        return wrapper.getFee(transaction);
     }
 }

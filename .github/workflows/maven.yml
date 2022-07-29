@@ -3,15 +3,19 @@
 
 name: Java CI with Maven
 
+concurrency: gluwa-java
+
 on:
   push:
     branches:
       - 'feature/**'
       - 'master'
+      - 'dev'
   pull_request:
     branches:
       - 'feature/**'
       - 'master'
+      - 'dev'
   workflow_dispatch:
 
 jobs:

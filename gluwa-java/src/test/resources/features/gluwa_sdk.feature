@@ -1,85 +1,70 @@
 @gluwaSdk
   Feature: End to End Unit Tests for Gluwa SDK
-    In order to manage my Enum
-    As a System Admin
-    I want to get the Enum
 
     @gluwaSdk1
     Scenario Outline: Post transaction happy path
-      When I post transaction via Gluwa SDK for "<Currency>"
+      When I post transaction via Gluwa SDK using parameters <Currency> <Amount> <TargetAddress> <Fee>
       Then I validate response that transaction is created
       Examples:
-        | Currency |
-        | USDCG    |
-        | sUSDCG   |
-        | NGNG     |
-        | sNGNG    |
+        | Currency | Amount |                TargetAddress               | Fee |
+        | USDCG    |   1    | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |  1  |
+        | sUSDCG   |   1    | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |  1  |
+        | NGNG     |   1    | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |  1  |
+        | sNGNG    |   1    | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |  1  |
 
-    @gluwaSdk2
-    Scenario: Post transaction negative test
-      When I post transaction via Gluwa SDK using invalid currency as "GCRE"
-#   TO-DISCUSS: Gluwa SDK returns exception message instead of returning bad request response and failing validation step
-#      Then I validate bad request response
-
-
-    @gluwaSdk3
-    Scenario: Get Payment QR Code happy path
-      When I get payment QR code via Gluwa SDK
-      Then I validate get response
-
-    @gluwaSdk5
-    Scenario Outline: Get List of Transactions happy path
-      When I get list of transactions for "<Currency>"
+    @gluwaSdk4
+    Scenario Outline: Get Payment QR Code happy path
+      When I get payment QR code via Gluwa SDK using parameters <Currency> <Amount> <Expiry> <Fee>
       Then I validate get response
       Examples:
-        | Currency |
-        | USDCG    |
-        | sUSDCG   |
-        | NGNG     |
-        | sNGNG    |
+        | Currency | Amount |  Expiry | Fee |
+        | USDCG    |   5    |  1800   |  0  |
+        | sUSDCG   |   1    |  1800   |  0  |
+        | GCRE     |   1    |  1800   |  0  |
+        | NGNG     |   101  |  1800   |  1  |
 
-#   TO-DO: After exception handler added to SDK, bad request validation to be added
     @gluwaSdk6
-    Scenario: Get List of Transactions negative test
-      When I get list of transactions for invalid currency "GCRE"
-#      Then I validate bad request response
-
-    @gluwaSdk7
-    Scenario Outline: Get transaction details by hash happy path
-      When I get a transaction by hash for "<Currency>"
+    Scenario Outline: Get transaction history for currencies with different statuses
+      When I get list of transactions with <Status> status for <Currency>
       Then I validate get response
       Examples:
-        | Currency |
-        | USDCG    |
-        | sUSDCG   |
-        | NGNG     |
-        | sNGNG    |
+        | Currency | Status     |
+        | USDCG    | Confirmed  |
+        | sUSDCG   | Confirmed  |
+        | NGNG     | Confirmed  |
+        | sNGNG    | Confirmed  |
+        | USDCG    | Incomplete |
+        | sUSDCG   | Incomplete |
+        | NGNG     | Incomplete |
+        | sNGNG    | Incomplete |
+
+
+    @gluwaSdk8
+    Scenario Outline: Get transaction details by hash Positive
+      When I get transaction by <TxnHash> for <Currency>
+      Then I validate get response
+      Examples:
+        | Currency |                                TxnHash                             |
+        | USDCG    | 0xb0015ecb8f2d4b2a77dbad40dbd024739f1346e5b4e5026631db88ed0f1ad5b4 |
+        | sUSDCG   | 0xeab93826d01a8b9958db234e2ee8820b6d5aa7c00e38d75e951b894676f9f345 |
+        | NGNG     | 0xbde2dbee48e18e18f5d10560e549c4d58b77f4cf84c46717f27ece026afb6e4f |
+        | sNGNG    | 0xc1d74c3c3a7791a96bd0cae42e2e5ddb993562131e83b248ed6d10b93a8ea366 |
 
       @gluwaSdk10
-      Scenario Outline: Get payment QR code with Payload happy path
-        When I get payment QR code with Payload via Gluwa SDK for "<Currency>"
+      Scenario Outline: Get payment QR code with Payload Positive
+        When I get payment QR code Payload via Gluwa SDK using parameters <Currency> <Amount> <Expiry> <Fee>
         Then I validate get response
         Examples:
-          | Currency |
-          | USDCG    |
-          | sUSDCG   |
-          | NGNG     |
-          | sNGNG    |
-
-    @gluwaSdk11
-    Scenario Outline: Get Address for currencies happy path
-      When I get address via Gluwa SDK for "<Currency>"
-      Then I validate get response
-      Examples:
-        | Currency |
-        | USDCG    |
-        | sUSDCG   |
-        | NGNG     |
-        | sNGNG    |
+          | Currency | Amount | Expiry | Fee |
+          | USDCG    |   5    |  1800  |  1  |
+          | sUSDCG   |   1    |  1800  |  1  |
+          | NGNG     |   101  |  1800  |  1  |
+          | sNGNG    |   1    |  1800  |  1  |
+          | GCRE     |   1    |  1800  |  1  |
 
     @gluwaSdk12
-    Scenario Outline: Get fee for currency Positive
-      When I get fee for currency "<Currency>"
+    Scenario Outline: Get Address for currencies Positive
+      When I get address via Gluwa SDK for <Currency>
       Then I validate get response
       Examples:
         | Currency |
@@ -87,5 +72,16 @@
         | sUSDCG   |
         | NGNG     |
         | sNGNG    |
+        | GCRE     |
 
-
+    @gluwaSdk14
+    Scenario Outline: Get fee for currency Positive
+      When I get fee for transaction of <Amount> for currency <Currency>
+      Then I validate get response
+      Examples:
+        | Currency | Amount |
+        | USDCG    | 10     |
+        | sUSDCG   | 10     |
+        | NGNG     | 10     |
+        | sNGNG    | 10     |
+        | GCRE     | 10     |
