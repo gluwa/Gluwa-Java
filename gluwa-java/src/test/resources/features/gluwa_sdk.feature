@@ -3,14 +3,14 @@
 
     @gluwaSdk1
     Scenario Outline: Post transaction happy path
-      When I post transaction via Gluwa SDK using parameters <Currency> <Amount> <TargetAddress> <Fee>
+      When I post transaction via Gluwa SDK using parameters <Currency> <Amount> <TargetAddress> <Fee> <Sign>
       Then I validate response that transaction is created
       Examples:
-        | Currency | Amount |                TargetAddress               | Fee |
-        | USDCG    |   1    | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |  1  |
-        | sUSDCG   |   1    | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |  1  |
-        | NGNG     |   1    | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |  1  |
-        | sNGNG    |   1    | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |  1  |
+        | Currency | Amount |                TargetAddress               | Fee | Sign  |
+        | USDCG    |   1    | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |  1  |       |
+        | sUSDCG   |   1    | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |  1  |       |
+        | NGNG     |   1    | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |  1  |       |
+        | sNGNG    |   1    | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |  1  |       |
 
     @gluwaSdk4
     Scenario Outline: Get Payment QR Code happy path

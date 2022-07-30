@@ -8,6 +8,7 @@ import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.HashMap;
 
+import io.cucumber.java8.He;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.message.BasicHeader;
 import org.bouncycastle.crypto.digests.SHA256Digest;
@@ -90,7 +91,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 	 * @return api response
 	 */
 	@Override
-	public GluwaResponse getPaymentQRCodeWithPayload(GluwaTransaction transaction) {
+	public GluwaResponse getPaymentQRCodeWithPayload(GluwaTransaction transaction, String signature) {
 		Header h1 = new BasicHeader("Content-Type", "application/json");
 		Header h2 = new BasicHeader("Authorization", "Basic " + configuration.getAuthorization());
 
@@ -171,7 +172,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 	}
 
 	@Override
-	public GluwaResponse postTransaction(GluwaTransaction transaction) {
+	public GluwaResponse postTransaction(GluwaTransaction transaction, String signature) {
 
 		Header h1 = new BasicHeader("Accept", "application/json");
 		Header h2 = new BasicHeader("Content-Type", "application/json;charset=UTF-8");
@@ -220,10 +221,10 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 	}
 
 	@Override
-	public GluwaResponse getListTransactionHistory(GluwaTransaction transaction) {
+	public GluwaResponse getListTransactionHistory(GluwaTransaction transaction, String signature) {
 
 		Header h1 = new BasicHeader("Accept", "application/json");
-		Header h2 = new BasicHeader("X-REQUEST-SIGNATURE", timestampSignature());
+		Header h2 = assignSignature(signature);
 
 		String path = generatePath(GluwaApiService.V1_PATH_TRANSACTION_HISTORY, transaction.getCurrency().toString());
 		path = path.replaceAll("\\{MasterEthereumAddress\\}", configuration.getMasterEthereumAddress());
@@ -248,10 +249,10 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 	}
 
 	@Override
-	public GluwaResponse getListTransactionDetail(GluwaTransaction transaction) {
+	public GluwaResponse getListTransactionDetail(GluwaTransaction transaction, String signature) {
 
 		Header h1 = new BasicHeader("Accept", "application/json");
-		Header h2 = new BasicHeader("X-REQUEST-SIGNATURE", timestampSignature());
+		Header h2 = assignSignature(signature);
 		String path = generatePath(GluwaApiService.V1_PATH_TRANSACTION_DETAIL, transaction.getCurrency().toString())
 				+ transaction.getTxnHash();
 
@@ -290,7 +291,6 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 	}
 
 	protected String timestampSignature() {
-
 		String timestamp = timestamp();
 		return base64Encoder.encodeToString((timestamp + "." + signMessage(timestamp.getBytes())).getBytes());
 	}
@@ -334,6 +334,19 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 
 	private String generatePath(String path, String currency) {
 		return path.replaceAll("\\{Currency\\}", currency);
+	}
+
+	protected Header assignSignature(String signature)
+	{
+		Header h2;
+		if (signature.isEmpty()) {
+			h2 = new BasicHeader("X-REQUEST-SIGNATURE", timestampSignature());
+		} else if (signature.equals("null")) {
+			h2 = new BasicHeader("X-REQUEST-SIGNATURE", " ");
+		} else {
+			h2 = new BasicHeader("X-REQUEST-SIGNATURE", Base64.getEncoder().encodeToString(signature.getBytes()));
+		}
+		return h2;
 	}
 
 	protected String signMessage(byte[] message) {
