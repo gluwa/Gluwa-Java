@@ -45,10 +45,10 @@ public class GluwaSdkStepDefs {
     }
 
 
-    @When("I get payment QR code via Gluwa SDK using parameters {} {} {} {}")
-    public void iGetPaymentQRCode(Object currency, String amount, int expiry, String fee) {
+    @When("I get payment QR code via Gluwa SDK using parameters {} {} {} {} {}")
+    public void iGetPaymentQRCode(Object currency, String amount, int expiry, String fee, String basicAuth) {
         try {
-            result = txTest.getPaymentQRCodeTest_Pos(currency, amount, expiry, fee);
+            result = txTest.getPaymentQRCodeTest_Pos(currency, amount, expiry, fee, basicAuth);
         } catch (GluwaSDKNetworkException e) {
             response.setResponseMessageAndCode(response.extractValidationMessageFromPath(e),
                     e.getStatusCode());
@@ -113,7 +113,7 @@ public class GluwaSdkStepDefs {
         }
     }
 
-    @When("I get transaction by {} for {}")
+    @When("I get transaction using parameters {} {} {}")
     public void iGetTransactionByHash(String txnHash, Object currency, String signature) {
         try {
             result = txTest.getListTransactionDetail_test(txnHash, currency, signature);
@@ -124,10 +124,10 @@ public class GluwaSdkStepDefs {
 
     }
 
-    @When("I get payment QR code Payload via Gluwa SDK using parameters {} {} {} {}")
-    public void iGetPaymentQRCodePayload(Object currency, String amount, int expiry, String fee, String signature) {
+    @When("I get payment QR code Payload via Gluwa SDK using parameters {} {} {} {} {}")
+    public void iGetPaymentQRCodePayload(Object currency, String amount, int expiry, String fee, String basicAuth) {
         try {
-            result = txTest.getPaymentQRCodeWithPayloadTest_Pos(currency, amount, expiry, fee, signature);
+            result = txTest.getPaymentQRCodeWithPayloadTest_Pos(currency, amount, expiry, fee, basicAuth);
         } catch (GluwaSDKNetworkException e) {
             response.setResponseMessageAndCode(response.extractValidationMessageFromPath(e),
                                                                   e.getStatusCode());

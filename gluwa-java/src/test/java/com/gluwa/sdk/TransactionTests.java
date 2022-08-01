@@ -29,12 +29,12 @@ public class TransactionTests {
      * @description = Positive test to get payment QR code in base64 format
      * @return = Base64 PNG format QR code
      */
-    public GluwaResponse getPaymentQRCodeTest_Pos(Object currency, String amount, int expiry, String fee) {
+    public GluwaResponse getPaymentQRCodeTest_Pos(Object currency, String amount, int expiry, String fee, String basicAuth) {
         transaction.setCurrency(currency);
         transaction.setAmount(amount);
         transaction.setExpiry(expiry);
         transaction.setFee(fee);
-        return wrapper.getPaymentQRCode(transaction);
+        return wrapper.getPaymentQRCode(transaction, basicAuth);
     }
 
     public GluwaResponse getPaymentQRCodeWithPayloadTest_Pos(Object currency, String amount, int expiry, String fee, String signature) {

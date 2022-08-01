@@ -30,25 +30,25 @@
       Examples:
         | Currency | Status     |
         | USDCG    | Confirmed  |
-        | sUSDCG   | Confirmed  |
-        | NGNG     | Confirmed  |
-        | sNGNG    | Confirmed  |
-        | USDCG    | Incomplete |
-        | sUSDCG   | Incomplete |
-        | NGNG     | Incomplete |
-        | sNGNG    | Incomplete |
+        #| sUSDCG   | Confirmed  |
+        #| NGNG     | Confirmed  |
+        #| sNGNG    | Confirmed  |
+        #| USDCG    | Incomplete |
+        #| sUSDCG   | Incomplete |
+        #| NGNG     | Incomplete |
+        #| sNGNG    | Incomplete |
 
 
     @gluwaSdk8
     Scenario Outline: Get transaction details by hash Positive
-      When I get transaction by <TxnHash> for <Currency>
+      When I get transaction using parameters <TxnHash> <Currency> <Sign>
       Then I validate get response
       Examples:
-        | Currency |                                TxnHash                             |
-        | USDCG    | 0xb0015ecb8f2d4b2a77dbad40dbd024739f1346e5b4e5026631db88ed0f1ad5b4 |
-        | sUSDCG   | 0xeab93826d01a8b9958db234e2ee8820b6d5aa7c00e38d75e951b894676f9f345 |
-        | NGNG     | 0xbde2dbee48e18e18f5d10560e549c4d58b77f4cf84c46717f27ece026afb6e4f |
-        | sNGNG    | 0xc1d74c3c3a7791a96bd0cae42e2e5ddb993562131e83b248ed6d10b93a8ea366 |
+        | Currency |                                TxnHash                             | Sign |
+        | USDCG    | 0xb0015ecb8f2d4b2a77dbad40dbd024739f1346e5b4e5026631db88ed0f1ad5b4 |      |
+        | sUSDCG   | 0xeab93826d01a8b9958db234e2ee8820b6d5aa7c00e38d75e951b894676f9f345 |      |
+        | NGNG     | 0xbde2dbee48e18e18f5d10560e549c4d58b77f4cf84c46717f27ece026afb6e4f |      |
+        | sNGNG    | 0xc1d74c3c3a7791a96bd0cae42e2e5ddb993562131e83b248ed6d10b93a8ea366 |      |
 
       @gluwaSdk10
       Scenario Outline: Get payment QR code with Payload Positive

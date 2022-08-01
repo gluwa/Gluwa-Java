@@ -36,27 +36,32 @@ Feature: Negative Unit Tests for Gluwa SDK
 
   @gluwaSdkNeg4
   Scenario Outline: Get payment QR code with Payload negative tests
-    When I get payment QR code Payload via Gluwa SDK using parameters <Currency> <Amount> <Expiry> <Fee>
+    When I get payment QR code Payload via Gluwa SDK using parameters <Currency> <Amount> <Expiry> <Fee> <Auth>
     Then I validate request response <Code> and <Message>
     Examples:
-      |  Code  | Currency |              Message                      |  Amount |  Expiry | Fee |
-      |  400   |   DOGE   |  "DOGE" is not a valid Currency.          |    1    |  1800   |  1  |
-      |  503   |   KRWG   |  Unsupported currency                     |    1    |  1800   |  1  |
-      |  400   |   USDCG  |  The Amount must be greater than the fee  |    1    |  1800   |  1  |
-      |  400   |   USDCG  |  The Amount must be greater than the fee  |   -1    |  1800   |  1  |
-      |  400   |   USDCG  |  The Amount field is required.            |         |  1800   |  1  |
-      |  400   |   USDCG  |  The field Expiry must be between 0 and   |    5    |  -1     |  1  |
-      |  400   |   NGNG   |  The Amount must be greater than the fee  |    1    |  1800   |  1  |
+      |  Code  | Currency |              Message                      |  Amount |  Expiry | Fee | Auth    |
+      |  400   |   DOGE   |  "DOGE" is not a valid Currency.          |    1    |  1800   |  1  |         |
+      |  503   |   KRWG   |  Unsupported currency                     |    1    |  1800   |  1  |         |
+      |  400   |   USDCG  |  The Amount must be greater than the fee  |    1    |  1800   |  1  |         |
+      |  400   |   USDCG  |  The Amount must be greater than the fee  |   -1    |  1800   |  1  |         |
+      |  400   |   USDCG  |  The Amount field is required.            |         |  1800   |  1  |         |
+      |  400   |   USDCG  |  The field Expiry must be between 0 and   |    5    |  -1     |  1  |         |
+      |  400   |   NGNG   |  The Amount must be greater than the fee  |    1    |  1800   |  1  |         |
+      |  403   |   USDCG  |  Not authorized to use this endpoint.     |   5     |  1800   |  1  | null    |
+      |  403   |   USDCG  |  Not authorized to use this endpoint.     |   5     |  1800   |  1  | BITCOIN |
 
   @gluwaSdkNeg5
   Scenario Outline: Get transaction details by hash Negative
-    When I get transaction by <TxnHash> for <Currency>
+    When I get transaction using parameters <TxnHash> <Currency> <Sign>
     Then I validate request response <Code> and <Message>
     Examples:
-      | Currency |  Code |                                TxnHash                             |          Message               |
-      |   GCRE   |  400  | 0x10d68ef19b84afbdd305acf18a06a155864cae00716f47397f5f343c0adef1e9 | Unsupported currency GCRE.     |
-      |   DOGE   |  400  | 0x10d68ef19b84afbdd305acf18a06a155864cae00716f47397f5f343c0adef1e9 | The value 'DOGE' is not valid. |
-      |   NGNG   |  400  | 0x10d68ef19b84afbdd305acinvalid                                    | Invalid txnHash value.         |
+      | Currency |  Code |                                TxnHash                             |          Message                                |  Sign   |
+      |   GCRE   |  400  | 0x10d68ef19b84afbdd305acf18a06a155864cae00716f47397f5f343c0adef1e9 | Unsupported currency GCRE.                      |         |
+      |   DOGE   |  400  | 0x10d68ef19b84afbdd305acf18a06a155864cae00716f47397f5f343c0adef1e9 | The value 'DOGE' is not valid.                  |         |
+      |   NGNG   |  400  | 0x10d68ef19b84afbdd305acinvalid                                    | Invalid txnHash value.                          |         |
+      |   USDCG  |  403  | 0x821af423dc65def5b116b20876aeba2275cb914161b23c32f8fbd15a578ce9b8 | Address signature does not have a valid format. | invalid |
+      |   USDCG  |  403  | 0x10d68ef19b84afbdd305acf18a06a155864cae00716f47397f5f343c0adef1e9 | No request signature header was provided.       | null    |
+      |   USDCG  |  400  | 0x10d68ef19b84afbdd305acf18a06a155864cae00716f47397f5f343c0adef1e9 | Transaction hash:                               |         |
 
   @gluwaSdkNeg6
   Scenario Outline: Post transaction negative tests
@@ -73,14 +78,16 @@ Feature: Negative Unit Tests for Gluwa SDK
 
   @gluwaSdkNeg7
   Scenario Outline: Get Payment QR Code negative tests
-    When I get payment QR code via Gluwa SDK using parameters <Currency> <Amount> <Expiry> <Fee>
+    When I get payment QR code via Gluwa SDK using parameters <Currency> <Amount> <Expiry> <Fee> <Auth>
     Then I validate request response <Code> and <Message>
     Examples:
-      | Code   | Currency |           Message                         | Amount |  Expiry | Fee |
-      |  400   |   DOGE   | "DOGE" is not a valid Currency.           |   1    |  1800   |  1  |
-      |  400   |   USDCG  | The Amount must be greater than the fee   |   1    |  1800   |  1  |
-      |  503   |   KRWG   |  Unsupported currency                     |   1    |  1800   |  1  |
-      |  400   |   USDCG  |  The Amount must be greater than the fee  |  -1    |  1800   |  1  |
-      |  400   |   USDCG  |  The Amount field is required.            |        |  1800   |  1  |
-      |  400   |   USDCG  |  The field Expiry must be between 0 and   |   5    |  -1     |  1  |
-      |  400   |   NGNG   |  The Amount must be greater than the fee  |   1    |  1800   |  1  |
+      | Code   | Currency |           Message                         | Amount |  Expiry | Fee | Auth    |
+      |  400   |   DOGE   | "DOGE" is not a valid Currency.           |   1    |  1800   |  1  |         |
+      |  400   |   USDCG  | The Amount must be greater than the fee   |   1    |  1800   |  1  |         |
+      |  503   |   KRWG   |  Unsupported currency                     |   1    |  1800   |  1  |         |
+      |  400   |   USDCG  |  The Amount must be greater than the fee  |  -1    |  1800   |  1  |         |
+      |  400   |   USDCG  |  The Amount field is required.            |        |  1800   |  1  |         |
+      |  400   |   USDCG  |  The field Expiry must be between 0 and   |   5    |  -1     |  1  |         |
+      |  400   |   NGNG   |  The Amount must be greater than the fee  |   1    |  1800   |  1  |         |
+      |  403   |   USDCG  |  Not authorized to use this endpoint.     |   5    |  1800   |  1  | null    |
+      |  403   |   USDCG  |  Not authorized to use this endpoint.     |   5    |  1800   |  1  | BITCOIN |

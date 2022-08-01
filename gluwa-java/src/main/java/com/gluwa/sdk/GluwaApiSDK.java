@@ -8,7 +8,7 @@ public interface GluwaApiSDK {
 	 * @param transaction parameter
 	 * @return GluwaResponse
 	 */
-	public GluwaResponse getPaymentQRCode(GluwaTransaction transaction);
+	public GluwaResponse getPaymentQRCode(GluwaTransaction transaction, String basicAuth);
 
 	/**
 	 * https://docs.gluwa.com/api/qr-code
@@ -16,7 +16,7 @@ public interface GluwaApiSDK {
 	 * @param transaction parameter
 	 * @return GluwaResponse
 	 */
-	public GluwaResponse getPaymentQRCodeWithPayload(GluwaTransaction transaction, String signature);
+	public GluwaResponse getPaymentQRCodeWithPayload(GluwaTransaction transaction, String basicAuth);
 
 	/**
 	 * https://docs.gluwa.com/api/balance#get-v-1-currency-addresses-address

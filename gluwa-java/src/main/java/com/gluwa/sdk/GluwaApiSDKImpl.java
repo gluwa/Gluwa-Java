@@ -52,9 +52,9 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 	 * @return api response
 	 */
 	@Override
-	public GluwaResponse getPaymentQRCode(GluwaTransaction transaction) {
+	public GluwaResponse getPaymentQRCode(GluwaTransaction transaction, String basicAuth) {
 		Header h1 = new BasicHeader("Content-Type", "application/json");
-		Header h2 = new BasicHeader("Authorization", "Basic " + configuration.getAuthorization());
+		Header h2 = assignBasicAuth(basicAuth);
 
 		HashMap<String, Object> params = new HashMap<>();
 		params.put("Signature", timestampSignature());
@@ -91,9 +91,9 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 	 * @return api response
 	 */
 	@Override
-	public GluwaResponse getPaymentQRCodeWithPayload(GluwaTransaction transaction, String signature) {
+	public GluwaResponse getPaymentQRCodeWithPayload(GluwaTransaction transaction, String basicAuth) {
 		Header h1 = new BasicHeader("Content-Type", "application/json");
-		Header h2 = new BasicHeader("Authorization", "Basic " + configuration.getAuthorization());
+		Header h2 = assignBasicAuth(basicAuth);
 
 		HashMap<String, Object> params = new HashMap<>();
 		params.put("Signature", timestampSignature());
@@ -344,7 +344,25 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		} else if (signature.equals("null")) {
 			h2 = new BasicHeader("X-REQUEST-SIGNATURE", " ");
 		} else {
-			h2 = new BasicHeader("X-REQUEST-SIGNATURE", Base64.getEncoder().encodeToString(signature.getBytes()));
+			h2 = new BasicHeader("X-REQUEST-SIGNATURE", getBase64EncodedString(signature));
+		}
+		return h2;
+	}
+
+	protected String getBase64EncodedString(String auth) {
+		return base64Encoder.encodeToString(auth.getBytes());
+
+	}
+
+	protected Header assignBasicAuth(String basicAuth) {
+
+		Header h2;
+		if (basicAuth.isEmpty()) {
+			h2 = new BasicHeader("Authorization", "Basic " + configuration.getAuthorization());
+		} else if (basicAuth.equals("null")) {
+			h2 = new BasicHeader("Authorization", " ");
+		} else {
+			h2 = new BasicHeader("Authorization", "Basic " + getBase64EncodedString(basicAuth));
 		}
 		return h2;
 	}
