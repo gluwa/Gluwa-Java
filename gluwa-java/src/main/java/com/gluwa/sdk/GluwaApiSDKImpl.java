@@ -176,7 +176,12 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 
 		Header h1 = new BasicHeader("Accept", "application/json");
 		Header h2 = new BasicHeader("Content-Type", "application/json;charset=UTF-8");
-		String path = GluwaApiService.V1_PATH_TRANSACTION;
+		String path;
+		if (transaction.getCurrency().toString().equals("GCRE")) {
+			path = GluwaApiService.V1_PATH_TRANSACTION_TRANSFER;
+		} else {
+			path = GluwaApiService.V1_PATH_TRANSACTION;
+		}
 
 		GluwaResponse feeResponse = getFee(transaction);
 

@@ -34,6 +34,7 @@ public class GluwaSdkStepDefs {
         } catch (GluwaSDKNetworkException e) {
             response.setResponseMessageAndCode(response.extractValidationMessageFromPath(e),
                     e.getStatusCode());
+            System.out.println(response.extractValidationMessageFromPath(e));
         }
     }
 
