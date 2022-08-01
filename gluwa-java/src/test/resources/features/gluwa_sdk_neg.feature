@@ -69,13 +69,16 @@ Feature: Negative Unit Tests for Gluwa SDK
     Then I validate request response <Code> and <Message>
     Examples:
       | Currency | Code | Message                                          | Amount  |               TargetAddress                |   Fee  | Sign  |
-      #|   GCRE   | 400  | Unsupported currency GCRE.                       |   1     | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |   1    |       |
-      #|   DOGE   | 400  | The value 'DOGE' is not valid.                   |   1     | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |   1    |       |
-      #|   USDCG  | 400  | Target address is not a valid ethereum address.  |   1     | TronSolanaBNBMaticNearMixAddressesInvalid  |   1    |       |
-      #|   USDCG  | 400  | amount should be a positive number               |  -1     | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |   1    |       |
-      #|   USDCG  | 400  | amount should be a positive number               |  foobar | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |   1    |       |
-      #|   USDCG  | 400  | Amount must be greater than 0.                   |   0     | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |   1    |       |
+      |   GCRE   | 400  | Unsupported currency GCRE.                       |   1     | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |   1    |       |
+      |   DOGE   | 400  | The value 'DOGE' is not valid.                   |   1     | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |   1    |       |
+      |   USDCG  | 400  | Target address is not a valid ethereum address.  |   1     | TronSolanaBNBMaticNearMixAddressesInvalid  |   1    |       |
+      |   USDCG  | 400  | amount should be a positive number               |  -1     | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |   1    |       |
+      |   USDCG  | 400  | amount should be a positive number               |  foobar | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |   1    |       |
+      |   USDCG  | 400  | Amount must be greater than 0.                   |   0     | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |   1    |       |
       |   GCRE   | 400  | The signed transaction format is invalid.        |   1     | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |   1    |       |
+      |   NGNG   | 400  | The Signature field is required.                 |   1     | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |   1    | null  |
+      |   NGNG   | 400  | Signature is invalid                             |   1     | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |   1    | invalid |
+
 
   @gluwaSdkNeg7
   Scenario Outline: Get Payment QR Code negative tests

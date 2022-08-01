@@ -191,7 +191,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		String hash = hashTransaction(transaction);
 
 		HashMap<String, Object> params = new HashMap<>();
-		params.put("Signature", signMessage(Numeric.hexStringToByteArray(hash)));
+		params.put("Signature", assignSignatureForPost(signature, hash));
 		params.put("Source", configuration.getMasterEthereumAddress());
 		params.put("Currency", transaction.getCurrency().toString());
 		params.put("Target", transaction.getTargetAddress());
@@ -370,6 +370,18 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 			h2 = new BasicHeader("Authorization", "Basic " + getBase64EncodedString(basicAuth));
 		}
 		return h2;
+	}
+
+	protected String assignSignatureForPost(String signature, String hash){
+		String signedSignature;
+		if (signature.isEmpty()) {
+			signedSignature = signMessage(Numeric.hexStringToByteArray(hash));
+		} else if (signature.equals("null")) {
+			signedSignature = "";
+		} else {
+			signedSignature = signature;
+		}
+		return signedSignature;
 	}
 
 	protected String signMessage(byte[] message) {
