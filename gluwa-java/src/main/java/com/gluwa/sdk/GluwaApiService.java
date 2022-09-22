@@ -79,8 +79,8 @@ final class GluwaApiService {
 
 		try {
 			String netType = getNetType();
-
-			String apiURL = "https://api.gluwa.com/V1/Contract/Address/" + currency + "/" + netType;
+			String apiURL = getApiHost() + "/V1/Contract/Address/" + currency + "/" + netType;
+			
 			URL url = new URL(apiURL);
 
 			if (LOGGER.isDebugEnabled()) {
