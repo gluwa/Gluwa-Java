@@ -361,7 +361,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 			// append chainID
 			long chainIDValue;
 			if (configuration.__DEV__()) {
-				chainIDValue = 4;
+				chainIDValue = 5;
 			} else {
 				chainIDValue = 1;
 			}
