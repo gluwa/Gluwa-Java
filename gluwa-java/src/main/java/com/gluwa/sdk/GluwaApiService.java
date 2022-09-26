@@ -44,6 +44,7 @@ final class GluwaApiService {
 	protected final static String V1_PATH_ADDRESS = "/v1/{Currency}/Addresses/";
 	protected final static String V1_PATH_FEE = "/v1/{Currency}/fee?amount={Amount}";
 	protected final static String V1_PATH_TRANSACTION = "/v1/Transactions";
+	protected final static String V1_PATH_TRANSACTION_TRANSFER = "/v1/Transactions/Transfer/Ethereum";
 	protected final static String V1_PATH_TRANSACTION_HISTORY = "/v1/{Currency}/Addresses/{MasterEthereumAddress}/Transactions";
 	protected final static String V1_PATH_TRANSACTION_DETAIL = "/v1/{Currency}/Transactions/";
 
@@ -79,8 +80,8 @@ final class GluwaApiService {
 
 		try {
 			String netType = getNetType();
-
-			String apiURL = "https://api.gluwa.com/V1/Contract/Address/" + currency + "/" + netType;
+			String apiURL = getApiHost() + "/V1/Contract/Address/" + currency + "/" + netType;
+			
 			URL url = new URL(apiURL);
 
 			if (LOGGER.isDebugEnabled()) {
