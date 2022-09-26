@@ -8,7 +8,7 @@ public interface GluwaApiSDK {
 	 * @param transaction parameter
 	 * @return GluwaResponse
 	 */
-	public GluwaResponse getPaymentQRCode(GluwaTransaction transaction);
+	public GluwaResponse getPaymentQRCode(GluwaTransaction transaction, String basicAuth);
 
 	/**
 	 * https://docs.gluwa.com/api/qr-code
@@ -16,7 +16,7 @@ public interface GluwaApiSDK {
 	 * @param transaction parameter
 	 * @return GluwaResponse
 	 */
-	public GluwaResponse getPaymentQRCodeWithPayload(GluwaTransaction transaction);
+	public GluwaResponse getPaymentQRCodeWithPayload(GluwaTransaction transaction, String basicAuth);
 
 	/**
 	 * https://docs.gluwa.com/api/balance#get-v-1-currency-addresses-address
@@ -39,7 +39,7 @@ public interface GluwaApiSDK {
 	 * @param transaction
 	 * @return
 	 */
-	public GluwaResponse getListTransactionHistory(GluwaTransaction transaction) ;
+	public GluwaResponse getListTransactionHistory(GluwaTransaction transaction, String signature) ;
 
 
 	/**
@@ -48,7 +48,7 @@ public interface GluwaApiSDK {
 	 * @param transaction
 	 * @return GluwaResponse
 	 */
-	public GluwaResponse getListTransactionDetail(GluwaTransaction transaction);
+	public GluwaResponse getListTransactionDetail(GluwaTransaction transaction, String signature);
 
 	/**
 	 * https://docs.gluwa.com/api/transaction#post-v-1-transactions
@@ -56,7 +56,7 @@ public interface GluwaApiSDK {
 	 * @param transaction
 	 * @return GluwaResponse
 	 */
-	public GluwaResponse postTransaction(GluwaTransaction transaction);
+	public GluwaResponse postTransaction(GluwaTransaction transaction, String signature);
 
 
 	/**
