@@ -47,6 +47,7 @@ final class GluwaApiService {
 	protected final static String V1_PATH_TRANSACTION_TRANSFER = "/v1/Transactions/Transfer/Ethereum";
 	protected final static String V1_PATH_TRANSACTION_HISTORY = "/v1/{Currency}/Addresses/{MasterEthereumAddress}/Transactions";
 	protected final static String V1_PATH_TRANSACTION_DETAIL = "/v1/{Currency}/Transactions/";
+	protected final static String V1_PATH_TRANSACTION_ETH = "/v1/Transactions/Transfer/Ethereum";
 
 	private boolean __DEV__ = false;
 	ObjectMapper mapper = new ObjectMapper();
