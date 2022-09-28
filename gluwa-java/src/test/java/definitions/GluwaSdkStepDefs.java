@@ -1,28 +1,38 @@
 package definitions;
 
 import com.gluwa.sdk.*;
-import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.json.JSONObject;
+import support.TestContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
-//import static org.junit.Assert.*;
+
 
 public class GluwaSdkStepDefs {
-
-    TransactionTests txTest = new TransactionTests();
-    GluwaResponse result;
     private int actualStatusCode;
     private String actualBadResponseMessage;
+    private JSONObject responseContents;
 
-    @When("I post transaction via Gluwa SDK for {}")
-    public void iPostTransactionViaGluwaSDKForCurrency(Currency currency) {
-        result = txTest.postTransactionTest(currency);
+
+    TransactionTests txTest = new TransactionTests();
+
+    GluwaResponse result;
+
+    TestContext response = new TestContext();
+
+    Configuration configuration = new Configuration();
+
+    @When("I post transaction via Gluwa SDK using parameters {} {} {} {} {}")
+    public void iPostTransaction(Object unsupportedCurrency, String amount, String targetAddress, String fee, String signature) {
+        try {
+            configuration.setSign(signature);
+            result = txTest.postTransactionTest(unsupportedCurrency, amount, targetAddress, fee);
+        } catch (GluwaSDKNetworkException e) {
+            response.setResponseMessageAndCode(response.extractValidationMessageFromPath(e),
+                    e.getStatusCode());
+            System.out.println(response.extractValidationMessageFromPath(e));
+        }
     }
 
 
@@ -33,157 +43,109 @@ public class GluwaSdkStepDefs {
     }
 
 
-    @When("I get payment QR code via Gluwa SDK for currency {}")
-    public void iGetPaymentQRCodeViaGluwaSDK(Currency currency) {
+    @When("I get payment QR code via Gluwa SDK using parameters {} {} {} {} {} {}")
+    public void iGetPaymentQRCode(Object currency, String amount, int expiry, String fee, String basicAuth, String signature) {
         try {
-            result = txTest.getPaymentQRCodeTest_Pos(currency);
+            configuration.setBasic(basicAuth);
+            configuration.setSign(signature);
+            result = txTest.getPaymentQRCodeTest_Pos(currency, amount, expiry, fee);
         } catch (GluwaSDKNetworkException e) {
-            actualStatusCode = e.getStatusCode();
-            actualBadResponseMessage = e.extractBadRequestMessage();
+            response.setResponseMessageAndCode(response.extractValidationMessageFromPath(e),
+                    e.getStatusCode());
+            System.out.println(response.extractValidationMessageFromPath(e));
         }
     }
 
-
+    // TODO depricate this method
     @Then("I validate get response")
     public void iValidateResponse() {
         assertThat(result.getCode()).isEqualTo(200);
         assertThat(result.getReason()).isEqualTo("OK");
     }
 
-
     @When("I get list of transactions with {} status for {}")
     public void iGetListOfTransactionsFor(String status, Currency currency) {
-        result = TransactionTests.getListTransactionHistoryTest(status, currency);
+        result = TransactionTests.getListTransactionHistoryTest(0,0,status, currency);
     }
-
-
-    @When("I get a transaction by hash for {}")
-    public void iGetATransactionBy(Currency currency) {
-        result = txTest.getListTransactionDetail_test(currency);
-    }
-
-
-    @When("I post transaction via Gluwa SDK using unsupported currency for {}")
-    public void iPostTransactionViaGluwaSDKUsingInvalidCurrencyAs(Currency unsupportedCurrency) {
-        try {
-            result = txTest.postTransactionTest(unsupportedCurrency);
-        } catch (GluwaSDKNetworkException e) {
-            actualStatusCode = e.getStatusCode();
-            actualBadResponseMessage = e.extractBadRequestMessage();
-        }
-    }
-
 
     @Then("I validate request response {} and {}")
     public void iValidateBadRequestResponse(int code, String message) {
-        assertThat(actualStatusCode).isEqualTo(code);
-        assertThat(actualBadResponseMessage).isEqualTo(message);
+        System.out.println(response.getResponseMessage());
+        assertThat(response.getResponseCode()).isEqualTo(code);
+        assertThat(response.getResponseMessage()).contains(message);
     }
 
 
     @When("I get list of transactions with {} for unsupported currency {}")
-    public void iGetListOfTransactionsForInvalidCurrency(String status, Currency unsupportedCurrency) {
+    public void iGetListOfTransactions(String status, Object currency) {
         try {
-            result = TransactionTests.getListTransactionHistoryTest(status, unsupportedCurrency);
+            result = TransactionTests.getListTransactionHistoryTest(0,0,status, currency);
         } catch (GluwaSDKNetworkException e) {
             actualStatusCode = e.getStatusCode();
-            actualBadResponseMessage = e.extractBadRequestMessage();
+            actualBadResponseMessage = e.extractBadRequestMessage().trim();
         }
     }
 
 
     @When("I get address via Gluwa SDK for {}")
-    public void iGetAddressViaGluwaSDK(Currency currency) {
+    public void iGetAddress(Currency currency) {
         result = txTest.getAddressTest(currency);
     }
 
-
-    @When("I get payment QR code with Payload via Gluwa SDK for {}")
-    public void iGetPaymentQRCodeWithPayloadViaGluwaSDK(Currency currency) {
-        result = txTest.getPaymentQRCodeWithPayloadTest_Pos(currency);
-    }
-
-
-    @When("I get fee for currency {}")
-    public void iGetFeeForCurrencyTest(Object currency) {
+    @When("I get list of transactions using request parameters {} {} {} {} {}")
+    public void iGetListOfTransactionsNegative(int limit, int offset, String status, String signature, Object Currency) {
         try {
-            result = txTest.getFeeTest_test(currency);
+            configuration.setSign(signature);
+            result = TransactionTests.getListTransactionHistoryTest(limit, offset, status, Currency);
         } catch (GluwaSDKNetworkException e) {
-            actualStatusCode = e.getStatusCode();
-            actualBadResponseMessage = e.extractBadRequestMessage();
+            response.setResponseMessageAndCode(response.extractValidationMessageFromPath(e),
+                    e.getStatusCode());
         }
     }
 
-    @When("I get payment QR code via Gluwa SDK for invalid currency {}")
-    public void iGetPaymentQRCodeViaGluwaSDKForUnsupportedCurrencyCurrency(Object currency) {
+    @When("I get fee for transaction of {} for currency {}")
+    public void iGetFeeForCurrencyTest(String amount, Object currency) {
         try {
-            result = txTest.getPaymentQRCodeTest_Pos(currency);
+            result = txTest.getFeeTest_test(currency, amount);
+            System.out.println(result.getBody());
         } catch (GluwaSDKNetworkException e) {
-            actualStatusCode = e.getStatusCode();
-            actualBadResponseMessage = e.extractBadRequestMessage();
+            response.setResponseMessageAndCode(response.extractValidationMessageFromPath(e),
+                    e.getStatusCode());
         }
     }
 
-    @When("I post transaction via Gluwa SDK using invalid currency for {}")
-    public void iPostTransactionViaGluwaSDKUsingInvalidCurrencyForCurrency(Object invalidCurrency) {
+    @When("I get transaction using parameters {} {} {}")
+    public void iGetTransactionByHash(String txnHash, Object currency, String signature) {
         try {
-            result = txTest.postTransactionTest(invalidCurrency);
+            configuration.setSign(signature);
+            result = txTest.getListTransactionDetail_test(txnHash, currency);
         } catch (GluwaSDKNetworkException e) {
-            actualStatusCode = e.getStatusCode();
-            System.out.println(e.extractBadRequestMessage());
-            actualBadResponseMessage = e.extractBadRequestMessage();
-        }
-    }
-
-    @When("I get list of transactions with {} for invalid currency {}")
-    public void iGetListOfTransactionsWithStatusForInvalidCurrencyInvalidCurrency(String status, Object invalidCurrency) {
-        try {
-            result = TransactionTests.getListTransactionHistoryTest(status, invalidCurrency);
-        } catch (GluwaSDKNetworkException e) {
-            actualStatusCode = e.getStatusCode();
-            actualBadResponseMessage = e.extractBadRequestMessage();
-        }
-    }
-
-    @When("I get transaction by hash for unsupported {}")
-    public void iGetTransactionByHashForUnsupportedCurrency(Currency unsupportedCurrency) {
-        try {
-            result = txTest.getListTransactionDetail_test(unsupportedCurrency);
-        } catch (GluwaSDKNetworkException e) {
-            actualStatusCode = e.getStatusCode();
-            actualBadResponseMessage = e.extractBadRequestMessage();
+            response.setResponseMessageAndCode(response.extractValidationMessageFromPath(e),
+                    e.getStatusCode());
         }
 
     }
 
-    @When("I get transaction by hash for invalid {}")
-    public void iGetTransactionByHashForInvalidInvalidCurrency(Object invalidCurrency) {
+    @When("I get payment QR code Payload via Gluwa SDK using parameters {} {} {} {} {} {}")
+    public void iGetPaymentQRCodePayload(Object currency, String amount, int expiry, String fee, String basicAuth, String signature) {
         try {
-            result = txTest.getListTransactionDetail_test(invalidCurrency);
+            configuration.setSign(signature);
+            configuration.setBasic(basicAuth);
+            result = txTest.getPaymentQRCodeWithPayloadTest_Pos(currency, amount, expiry, fee);
         } catch (GluwaSDKNetworkException e) {
-            actualStatusCode = e.getStatusCode();
-            actualBadResponseMessage = e.extractBadRequestMessage();
-        }
-    }
-
-    @When("I get payment QR code Payload via Gluwa SDK for invalid {}")
-    public void iGetPaymentQRCodePayloadViaGluwaSDKForUnsupportedCurrency(Object invalidCurrency) {
-        try {
-            result = txTest.getPaymentQRCodeWithPayloadTest_Pos(invalidCurrency);
-        } catch (GluwaSDKNetworkException e) {
-            actualStatusCode = e.getStatusCode();
-            actualBadResponseMessage = e.extractBadRequestMessage();
+            response.setResponseMessageAndCode(response.extractValidationMessageFromPath(e),
+                                                                  e.getStatusCode());
+            System.out.println("Message: " + response.extractValidationMessageFromPath(e) + " Status Code: " + e.getStatusCode());
         }
     }
 
     @When("I get address via Gluwa SDK with invalid {}")
-    public void iGetAddressViaGluwaSDKWithInvalidInvalidCurrency(Object invalidCurrency) {
+    public void iGetAddress(Object invalidCurrency) {
         try {
             result = txTest.getAddressTest(invalidCurrency);
         } catch (GluwaSDKNetworkException e) {
-            actualStatusCode = e.getStatusCode();
-            System.out.println(e.extractBadRequestMessage());
-            actualBadResponseMessage = e.extractBadRequestMessage();
+            response.setResponseMessageAndCode(response.extractValidationMessageFromPath(e),
+                                                                  e.getStatusCode());
         }
     }
 }

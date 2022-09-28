@@ -1,5 +1,7 @@
 package com.gluwa.sdk;
 
+import java.net.MalformedURLException;
+
 public interface GluwaApiSDK {
 
 	/**

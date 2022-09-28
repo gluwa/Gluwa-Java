@@ -33,4 +33,9 @@ public class GluwaSDKNetworkException extends GluwaSDKException {
 		String badRequestMessage = badRequestJson.getString("Message");
 		return badRequestMessage;
 	}
+
+	public JSONObject getResponseContents() {
+		JSONObject content = new JSONObject(this.getBody());
+		return content;
+	}
 }
