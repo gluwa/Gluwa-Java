@@ -8,7 +8,6 @@ import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.HashMap;
 
-import io.cucumber.java8.He;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.message.BasicHeader;
 import org.bouncycastle.crypto.digests.SHA256Digest;
@@ -52,12 +51,12 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 	 * @return api response
 	 */
 	@Override
-	public GluwaResponse getPaymentQRCode(GluwaTransaction transaction, String basicAuth) {
+	public GluwaResponse getPaymentQRCode(GluwaTransaction transaction) {
 		Header h1 = new BasicHeader("Content-Type", "application/json");
-		Header h2 = assignBasicAuth(basicAuth);
+		Header h2 = assignBasicAuth(configuration.getBasic());
 
 		HashMap<String, Object> params = new HashMap<>();
-		params.put("Signature", timestampSignature());
+		params.put("Signature", assignSignatureString(configuration.getSign()));
 		params.put("Currency", transaction.getCurrency().toString());
 		params.put("Target", configuration.getMasterEthereumAddress());
 		params.put("Amount", transaction.getAmount());
@@ -91,12 +90,12 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 	 * @return api response
 	 */
 	@Override
-	public GluwaResponse getPaymentQRCodeWithPayload(GluwaTransaction transaction, String basicAuth) {
+	public GluwaResponse getPaymentQRCodeWithPayload(GluwaTransaction transaction) {
 		Header h1 = new BasicHeader("Content-Type", "application/json");
-		Header h2 = assignBasicAuth(basicAuth);
+		Header h2 = assignBasicAuth(configuration.getBasic());
 
 		HashMap<String, Object> params = new HashMap<>();
-		params.put("Signature", timestampSignature());
+		params.put("Signature", assignSignatureString(configuration.getSign()));
 		params.put("Currency", transaction.getCurrency().toString());
 		params.put("Target", configuration.getMasterEthereumAddress());
 		params.put("Amount", transaction.getAmount());
@@ -172,7 +171,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 	}
 
 	@Override
-	public GluwaResponse postTransaction(GluwaTransaction transaction, String signature) {
+	public GluwaResponse postTransaction(GluwaTransaction transaction) {
 
 		Header h1 = new BasicHeader("Accept", "application/json");
 		Header h2 = new BasicHeader("Content-Type", "application/json;charset=UTF-8");
@@ -190,8 +189,10 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 
 		String hash = hashTransaction(transaction);
 
+
 		HashMap<String, Object> params = new HashMap<>();
-		params.put("Signature", assignSignatureForPost(signature, hash));
+
+		params.put("Signature", assignSignatureForPost(configuration.getSign(), hash));
 		params.put("Source", configuration.getMasterEthereumAddress());
 		params.put("Currency", transaction.getCurrency().toString());
 		params.put("Target", transaction.getTargetAddress());
@@ -226,10 +227,10 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 	}
 
 	@Override
-	public GluwaResponse getListTransactionHistory(GluwaTransaction transaction, String signature) {
+	public GluwaResponse getListTransactionHistory(GluwaTransaction transaction) {
 
 		Header h1 = new BasicHeader("Accept", "application/json");
-		Header h2 = assignSignature(signature);
+		Header h2 = assignSignature(configuration.getSign());
 
 		String path = generatePath(GluwaApiService.V1_PATH_TRANSACTION_HISTORY, transaction.getCurrency().toString());
 		path = path.replaceAll("\\{MasterEthereumAddress\\}", configuration.getMasterEthereumAddress());
@@ -254,10 +255,10 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 	}
 
 	@Override
-	public GluwaResponse getListTransactionDetail(GluwaTransaction transaction, String signature) {
+	public GluwaResponse getListTransactionDetail(GluwaTransaction transaction) {
 
 		Header h1 = new BasicHeader("Accept", "application/json");
-		Header h2 = assignSignature(signature);
+		Header h2 = assignSignature(configuration.getSign());
 		String path = generatePath(GluwaApiService.V1_PATH_TRANSACTION_DETAIL, transaction.getCurrency().toString())
 				+ transaction.getTxnHash();
 
@@ -354,13 +355,25 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		return h2;
 	}
 
+	protected String assignSignatureString(String signature)
+	{
+		String h2;
+		if (signature.isEmpty()) {
+			h2 = timestampSignature();
+		} else if (signature.equals("null")) {
+			h2 = " ";
+		} else {
+			h2 = getBase64EncodedString(signature);
+		}
+		return h2;
+	}
+
 	protected String getBase64EncodedString(String auth) {
 		return base64Encoder.encodeToString(auth.getBytes());
 
 	}
 
 	protected Header assignBasicAuth(String basicAuth) {
-
 		Header h2;
 		if (basicAuth.isEmpty()) {
 			h2 = new BasicHeader("Authorization", "Basic " + configuration.getAuthorization());

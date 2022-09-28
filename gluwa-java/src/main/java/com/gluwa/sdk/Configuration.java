@@ -17,8 +17,24 @@ public class Configuration {
 	private String masterEthereumPrivateKey;
 	private String masterEthereumAddress;
 	private ECKeyPair eCKeyPair;
+	private static String sign = "";
+	private static String basic = "";
 
+	public String getBasic() {
+		return basic;
+	}
 
+	public void setBasic(String basic) {
+		this.basic = basic;
+	}
+
+	public String getSign() {
+		return sign;
+	}
+
+	public void setSign(String sign) {
+		this.sign = sign;
+	}
 
 	
 	public boolean __DEV__() {

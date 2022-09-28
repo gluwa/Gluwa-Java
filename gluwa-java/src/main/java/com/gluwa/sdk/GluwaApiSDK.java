@@ -1,5 +1,7 @@
 package com.gluwa.sdk;
 
+import java.net.MalformedURLException;
+
 public interface GluwaApiSDK {
 
 	/**
@@ -8,7 +10,7 @@ public interface GluwaApiSDK {
 	 * @param transaction parameter
 	 * @return GluwaResponse
 	 */
-	public GluwaResponse getPaymentQRCode(GluwaTransaction transaction, String basicAuth);
+	public GluwaResponse getPaymentQRCode(GluwaTransaction transaction);
 
 	/**
 	 * https://docs.gluwa.com/api/qr-code
@@ -16,7 +18,7 @@ public interface GluwaApiSDK {
 	 * @param transaction parameter
 	 * @return GluwaResponse
 	 */
-	public GluwaResponse getPaymentQRCodeWithPayload(GluwaTransaction transaction, String basicAuth);
+	public GluwaResponse getPaymentQRCodeWithPayload(GluwaTransaction transaction);
 
 	/**
 	 * https://docs.gluwa.com/api/balance#get-v-1-currency-addresses-address
@@ -39,7 +41,7 @@ public interface GluwaApiSDK {
 	 * @param transaction
 	 * @return
 	 */
-	public GluwaResponse getListTransactionHistory(GluwaTransaction transaction, String signature) ;
+	public GluwaResponse getListTransactionHistory(GluwaTransaction transaction) ;
 
 
 	/**
@@ -48,7 +50,7 @@ public interface GluwaApiSDK {
 	 * @param transaction
 	 * @return GluwaResponse
 	 */
-	public GluwaResponse getListTransactionDetail(GluwaTransaction transaction, String signature);
+	public GluwaResponse getListTransactionDetail(GluwaTransaction transaction);
 
 	/**
 	 * https://docs.gluwa.com/api/transaction#post-v-1-transactions
@@ -56,7 +58,7 @@ public interface GluwaApiSDK {
 	 * @param transaction
 	 * @return GluwaResponse
 	 */
-	public GluwaResponse postTransaction(GluwaTransaction transaction, String signature);
+	public GluwaResponse postTransaction(GluwaTransaction transaction);
 
 
 	/**

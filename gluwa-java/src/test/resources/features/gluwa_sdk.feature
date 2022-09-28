@@ -7,19 +7,19 @@
       Then I validate response that transaction is created
       Examples:
         | Currency | Amount |                TargetAddress               | Fee | Sign  |
-        | USDCG    |   1    | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |  1  |       |
+        | USDCG    |   1    | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |  10 |       |
         | sUSDCG   |   1    | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |  1  |       |
         | sNGNG    |   1    | 0xfd91d059f0d0d5f6adee0f4aa1fdf31da2557bc9 |  1  |       |
 
     @gluwaSdk4
     Scenario Outline: Get Payment QR Code happy path
-      When I get payment QR code via Gluwa SDK using parameters <Currency> <Amount> <Expiry> <Fee> <Auth>
+      When I get payment QR code via Gluwa SDK using parameters <Currency> <Amount> <Expiry> <Fee> <Auth> <Sign>
       Then I validate get response
       Examples:
-        | Currency | Amount |  Expiry | Fee | Auth |
-        | USDCG    |   50   |  1800   |  0  |      |
-        | sUSDCG   |   1    |  1800   |  0  |      |
-        | GCRE     |   1    |  1800   |  0  |      |
+        | Currency | Amount |  Expiry | Fee | Auth |  Sign  |
+        | USDCG    |   50   |  1800   |  0  |      |        |
+        | sUSDCG   |   1    |  1800   |  0  |      |        |
+        | GCRE     |   1    |  1800   |  0  |      |        |
 
     @gluwaSdk6
     Scenario Outline: Get transaction history for currencies with different statuses
@@ -48,14 +48,14 @@
 
       @gluwaSdk10
       Scenario Outline: Get payment QR code with Payload Positive
-        When I get payment QR code Payload via Gluwa SDK using parameters <Currency> <Amount> <Expiry> <Fee> <Auth>
+        When I get payment QR code Payload via Gluwa SDK using parameters <Currency> <Amount> <Expiry> <Fee> <Auth> <Sign>
         Then I validate get response
         Examples:
-          | Currency | Amount | Expiry | Fee | Auth |
-          | USDCG    |   50   |  1800  |  1  |      |
-          | sUSDCG   |   1    |  1800  |  1  |      |
-          | sNGNG    |   1    |  1800  |  1  |      |
-          | GCRE     |   1    |  1800  |  1  |      |
+          | Currency | Amount | Expiry | Fee | Auth | Sign |
+          | USDCG    |   50   |  1800  |  1  |      |      |
+          | sUSDCG   |   1    |  1800  |  1  |      |      |
+          | sNGNG    |   1    |  1800  |  1  |      |      |
+          | GCRE     |   1    |  1800  |  1  |      |      |
 
     @gluwaSdk12
     Scenario Outline: Get Address for currencies Positive
