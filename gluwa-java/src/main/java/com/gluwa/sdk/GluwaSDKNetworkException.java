@@ -1,6 +1,5 @@
 package com.gluwa.sdk;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class GluwaSDKNetworkException extends GluwaSDKException {
@@ -33,10 +32,5 @@ public class GluwaSDKNetworkException extends GluwaSDKException {
 		JSONObject badRequestJson = new JSONObject(this.getBody());
 		String badRequestMessage = badRequestJson.getString("Message");
 		return badRequestMessage;
-	}
-
-	public JSONObject getResponseContents() {
-		JSONObject content = new JSONObject(this.getBody());
-		return content;
 	}
 }
