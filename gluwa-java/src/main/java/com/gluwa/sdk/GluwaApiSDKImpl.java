@@ -177,7 +177,7 @@ public class GluwaApiSDKImpl implements GluwaApiSDK {
 		Header h2 = new BasicHeader("Content-Type", "application/json;charset=UTF-8");
 		String path;
 		if (transaction.getCurrency().toString().equals("GCRE")) {
-			path = GluwaApiService.V1_PATH_TRANSACTION_TRANSFER;
+			path = GluwaApiService.V1_PATH_TRANSACTION_ETH;
 		} else {
 			path = GluwaApiService.V1_PATH_TRANSACTION;
 		}
