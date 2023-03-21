@@ -37,7 +37,7 @@ final class GluwaApiService {
 	static final Logger LOGGER = LoggerFactory.getLogger(GluwaApiService.class);
 
 	private final static String apiHost = "https://api.gluwa.com";
-	private final static String apiHostDev = "https://sandbox.api.gluwa.com";
+	private final static String apiHostDev = "https://api-test.gluwa.com";
 
 	protected final static String V1_PATH_QRCODE = "/v1/QRCode";
 	protected final static String V1_PATH_QRCODE_PAYLOAD = "/v1/QRCode/payload";
